@@ -1,0 +1,255 @@
+\documentclass[a4paper,notitlepage]{article}
+\usepackage{inputenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{color}
+\usepackage{soul}
+\usepackage{hyperref}
+\usepackage{cleveref}
+
+\bibliographystyle{IEEEtran}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% PACKAGE CONFIG. %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\usepackage[a4paper,top=2.5cm,bottom=2cm,left=2.5cm,right=2cm]{geometry}	% page margins
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% CUSTOM MACROS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% macros for physics objects
+\newcommand{\ket}[1]{\vert{#1}\rangle}
+\newcommand{\bra}[1]{\langle{#1}\vert}
+\newcommand{\avg}[1]{\left\langle{#1}\right\rangle}
+
+% macros for math objects
+\newcommand{\re}{\mathrm{Re}\,}
+\newcommand{\im}{\mathrm{Im}\,}
+\newcommand{\abs}[1]{\left\vert{#1}\right\vert}
+
+% specific macros for this document
+\renewcommand{\t}[1]{\mathrm{#1}}
+\renewcommand{\b}[1]{\mathbf{#1}}
+
+% useful reference macros
+\newcommand{\figref}[1]{Fig.~\ref{#1}}
+\renewcommand{\eqref}[1]{Eq.~(\ref{#1})}
+\newcommand{\secref}[1]{Sec.~\ref{#1}}
+
+\makeatletter
+\renewcommand{\maketitle}{\bgroup\setlength{\parindent}{0pt}
+	\begin{center}
+		\LARGE{\@title}
+	\end{center}	
+	\begin{flushright}
+		\small{\@author}\\
+		\small{\@date}
+	\end{flushright}\egroup
+}
+\makeatother
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% BEGIN DOCUMENT %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+\title{\texttt{gprob} note}
+\author{
+Sergey Fedorov\\
+\emph{Quantop, Niels Bohr Institute \\Copenhagen, Denmark}}
+\date{\today}
+\maketitle
+
+Probabilistic programs define statistical models as compositions of primitive distributions conditioned on observations.
+Inference of general conditional distributions is a hard task. 
+The computational overhead of general inference methods, such as Markov chain or Hamiltonian Monte-Carlo, can make it difficult for probabilistic programs to compete with problem-specific approaches. 
+For Gaussian random variables, however, this is not necessarily the case --- as conditional distributions can be found analytically, the overhead for their computation can be minimal.
+
+
+This note presents the background theory for \texttt{gprob}, a probabilistic programming package that specializes to Gaussian random variables. 
+
+
+\section{Distributions defined via linear maps.}
+
+Any Gaussian probabilistic program~\cite{stein_compositional_2021} can be expressed as a linear map of a number of independent identically distributed (iid) normal variables $e_i$ with zero mean and unit variance,
+\begin{equation}
+e_i \sim \mathcal{N}(0,1),\qquad i=1,\ldots,n.
+\end{equation} 
+In \texttt{gprob}, all random arrays are represented in this way --- as affine maps of latent variables. E.g., a random array named $x$ indexed by a multi-dimensional index $ijk\ldots$ is represented as
+\begin{equation}
+x_{ijk\ldots}=\sum_\lambda e_\lambda a_{\lambda, ijk\ldots}+b_{ijk\ldots},
+\end{equation}
+where $\{e_\lambda\sim \mathcal{N}(0,1)\}$, $\lambda = 1,\ldots,n$ is the set of latent univariate normal variables, and $a$ and $b$ are numerical arrays with real or complex coefficients. The mean of $x_{ijk\ldots}$ equals $b_{ijk\ldots}$, and the covariance is
+\begin{equation}
+C_{ijk\ldots,rst\ldots}=\sum_{\lambda} a_{\lambda, ijk\ldots} a^*_{\lambda, rst\ldots},
+\end{equation}
+where $rst\ldots$ run over the same set of indices as $ijk\ldots$ and $^*$ denotes complex conjugation.
+
+New latent variables are allocated during calls to \texttt{normal()}. For example, \texttt{normal(0, 1)} produces one latent variable, and \texttt{normal(size=sz)}, where \texttt{sz} is integer, produces \texttt{sz} new latent variables. A global inventory of all latent variables is maintained, but their joint distributions are only materialized within individual arrays. This has an effect on the memory footprint. Roughly speaking, if one random variable takes $m$ bytes, then two arrays of $n$ variables each will take $m\times(2\times n^2)$ bytes, and not $m\times (2\times n)^2$ bytes. 
+
+
+\section{Conditioning.}
+\label{sec:conditioning}
+
+In a probabilistic language that maintains a joint distribution over all latent variables, such as the one presented in Ref.~\cite{stein_compositional_2021}, conditioning is a statement that updates the latent distribution. One can think of the conditioning in this case as a post-selection to the realizations of the latent variables that ensures that all the conditions are fulfilled. In contrast, in \texttt{gprob}, conditioning of $x$ on $y=0$ is an expression that produces a new random variable, whose latent space is the union of the latent spaces of $x$ and $y$. 
+In this case, one can think of the conditioning as creating a version $x$ that is feed-forward corrected based on the measurement of $y$.
+
+
+To show how the conditioning is implemented, we consider the one-dimensional real case. Any random variable can be transformed to this representation by flattening and, if the variable is complex, by separating its real and imaginary parts. Let the conditioned variable be $\b{x}$, the condition be $\b{y}=\b{0}$, and the result of conditioning be $\b{z}\equiv\b{x}|(\b{y}=\b{0})$. All more general cases can be reduced to this: if a non-zero value of $\b{y}$ was observed, this value can be subtracted from $\b{y}$, and if there is more than one observation, they can be stacked together in one $\b{y}$ vector.
+
+The variables $\b{x}$ and $\b{y}$ take values in $\mathbb{R}^{d_x}$ and $\mathbb{R}^{d_y}$, and are represented by the maps of the same vector of latent variables $\b{e}=(e_1,\ldots,e_n)$,
+\begin{equation}
+\b{x}=\b{A}_x^T\b{e} + \b{b}_x,\qquad
+\b{y}=\b{A}_y^T\b{e} + \b{b}_y,
+\end{equation}
+where $\b{A}_x$ and $\b{A}_y$ are, respectively, $n\times d_x$ and $n\times d_y$ matrices, and $\b{b}_x$ and $\b{b}_y$ are $d_x$ and $d_y$-size mean vectors. The rank of the condition matrix, $\b{A}_y$, is assumed to be full and equal to $d_y\le n$, which means that the conditions are neither incompatible nor tautological. If the rank of $\b{A}_y$ is less than $d_y$, yet the conditions are compatible, some of them can be eliminated from $\b{A}_y$.
+
+Conditioning splits the latent space into two orthogonal subspaces---one in which the allowed values of the latent variables are fully determined to yield the observed value of $\b{y}$, and one in which the values of the latent variables are unconstrained. 
+The conditional mean is found by evaluating $\b{x}$ at the value of the latent vector $\tilde{\b{e}}$ from the first subspace, which satisfies
+\begin{equation}\label{eq:condSys}
+\b{A}^T_y\tilde{\b{e}}+\b{b}_y=0.
+\end{equation}
+This value can be formally found as
+\begin{equation}
+\tilde{\b{e}}=-\left(\b{A}^{+}_y\right)^T\b{b}_y,
+\end{equation}
+where $\b{A}_{y}^{+}$ is the Moore–Penrose pseudoinverse of $\b{A}_{y}$. (As $\b{A}_{y}$ is normally not a square matrix, it does not have an inverse). To obtain $\tilde{\b{e}}$ in practice, it is more convenient to directly solve the system of equations in \eqref{eq:condSys} in the least square sense. The mean of the conditional variable $\b{z}$, $\b{b}_z$, is then given by
+\begin{equation}\label{eq:bz}
+\b{b}_z=\b{b}_x-\b{A}_x^T\left(\b{A}^{+}_y\right)^T \b{b}_y.
+\end{equation}
+
+The conditional map, $\b{A}_z$, is found by left-multiplying $\b{A}_x$ by the projector on the latent subspace unaffected by the conditioning, i.e. the subspace orthogonal to the columns of the constraint matrix $\b{A}_y$. The operator that performs the desired projection is $\b{I}-\b{A}_y\b{A}_y^{+}$, where $\b{I}$ is the identity matrix, and the conditional map is
+\begin{equation}\label{eq:Az}
+\b{A}_z=\b{A}_x-\b{A}_y\b{A}^{+}_y\b{A}_x.
+\end{equation}
+
+One can verify that the conditional mean and covariance that follow from Eqs.~(\ref{eq:bz}-\ref{eq:Az}) agree with those obtained based on the momentum representation of $\b{x}$ and $\b{y}$ (given in Appendix A). To make this comparison, we can use the facts that the cross-covariance matrix between $\b{x}$ and $\b{y}$ is
+\begin{equation}
+\b{C}_{xy}=\b{A}_{x}^T\b{A}_y,
+\end{equation}
+that $\b{P}=\b{A}_y\b{A}^{+}_y$ is an orthogonal projector satisfying $\b{P}^2=\b{P}$ and $\b{P}^T=\b{P}$, and also that for a full-rank matrix $\b{A}_y$ the block $\b{C}_{yy}=\b{A}^T_{y} \b{A}_{y}$ is invertible, with its inverse being
+\begin{equation}
+\b{C}_{yy}^{-1}=\b{A}^{+}_y\left(\b{A}^{+}_y\right)^T.
+\end{equation}
+
+
+
+\section{Causal conditioning of time series. Wiener filtering.}
+
+
+\secref{sec:conditioning} described the conditioning of all elements of one random vector $\b{x}$ on all elements of another vector $\b{y}$. There is also another, more specialized, problem that arises sometimes---the conditioning of individual elements $x_i$, for $i=1,..,d_x$, on subsets $\{y_j:\, j\le s_i\}$ for some non-decreasing set of integer indices $s_i$.  This problem appears, in particular, in the causal analysis of time series via Kalman and Wiener filtering, where the elements of $\b{x}$ and $\b{y}$ correspond to a range of sequential moments in time. (For an introduction to filtering see, for example, Ref.~\cite{brown_introduction_1983}). The time stamps on $\b{x}$ and $\b{y}$ are non-decreasing, but not necessarily equally separated, and can also repeat. The task can be for each $x_i$ to find its distribution conditioned only on those observations $\{y_j\}$ that came before $x_i$. We, therefore, call the corresponding problem ``causal conditioning".  
+
+
+Causal conditioning can be performed trivially using the result of \secref{sec:conditioning} by iterating over the elements of $\b{x}$ and each time selecting an appropriate range from $\b{y}$. This would be, roughly speaking, $d_x$ time more computationally expensive than the simple conditioning of all $x_i$ on all $y_j$. Fortunately, there is an algorithm that allows to causally condition all elements of $\b{x}$ in one go.
+
+To introduce this algorithm, we first note that in the case of regular conditioning both the conditional mean and map (given by \eqref{eq:bz} and \eqref{eq:Az}, respectively), could be expressed using a $d_y\times d_x$ matrix $\b{B}$, 
+\begin{equation}
+\b{B}=\b{A}^{+}_y\b{A}_x
+\end{equation}
+as
+\begin{equation}
+\b{b}_z^T=\b{b}_{x}^T-\b{b}_y^T \b{B},\qquad
+\b{A}_z=\b{A}_x-\b{A}_y\b{B}.
+\end{equation}
+The $i$-th column of $\b{B}$ consists of the coefficients that give the closest in Euclidean distance approximation of the $i$-th column of $\b{A}_x$ via a linear combination of the columns of $\b{A}_y$. 
+From this point of view, it should be clear that for vectors whose components are indexed left to right, $\b{x}=(x_1, \ldots, x_{d_x})$ and $\b{y}=(y_1, \ldots, y_{d_y})$, a causal structure can be enforced in conditioning by constraining the closest-approximation matrix $\b{B}$ to be upper-triangular,
+\begin{equation}\label{eq:Bstruct}
+\b{B}=\begin{pmatrix}
+\beta_{11} & \beta_{12} & \cdots & \beta_{1d_{x}}\\
+\vdots & \vdots & \ddots & \vdots\\
+\beta_{s_{1}1} & \beta_{s_{1}2} & \cdots & \beta_{s_{1}d_{x}}\\
+0 & \beta_{(s_{1}+1)2} & \cdots & \beta_{(s_{1}+1)d_{x}}\\
+\vdots & \vdots & \ddots & \vdots\\
+0 & \beta_{s_{2}2} & \cdots &  \beta_{s_{2}d_{x}}\\
+0 & 0 & \cdots & \beta_{(s_{2}+1)d_{x}} \\
+\vdots & \vdots & \ddots & \vdots\\
+0 & 0 & \cdots & \beta_{d_{y}d_{x}} 
+\end{pmatrix}.
+\end{equation}
+Here, the list of indices $s_{i}$ is a non-decreasing sequence of integers from the range $[1, d_y]$ that is tailored to the causal structure of the problem. For example, in causal Wiener filtering of a scalar random process $x(t)$ with a scalar noisy measurement $y(t)$, discretized as $x_i$ and $y_i$, we could put $s_i=i-1$ to use all observations before the time $t_i$ for the prediction of $x(t_i)$. 
+
+What remains is to find a way of obtaining causally-constrained matrices $\b{B}$. Towards this goal, we introduce the QR decomposition of $\b{A}_y$,
+\begin{equation}
+\b{A}_y = \b{Q}\b{R},
+\end{equation} 
+where $\b{Q}$ is a $n\times d_y$ matrix whose columns is an orthonormal set of vectors, and $\b{R}$ is a $d_y\times d_y$ non-degenerate upper triangular matrix. The left-multiplication of $\b{B}$ by $\b{R}$ preserves the triangular structure (meaning that the elements of $\b{B}$ that are zero in \eqref{eq:Bstruct} are also zero in the multiplication product), and, therefore, the least-square solution of the system of equations
+\begin{equation}
+\b{A}_y \b{B} = \b{A}_x,
+\end{equation}
+with the desired causal constraint on $\b{B}$ can be expressed as
+\begin{equation}
+\b{B}=\b{R}^{-1}\mathcal{M}\left[\b{Q}^T\b{A}_x\right],
+\end{equation}
+where $\mathcal{M}[\ldots]$ a masking operator that zeros in its argument $\ldots$ the matrix elements that are zero in \eqref{eq:Bstruct}.
+Finally, the causally conditioned mean and map are given by
+\begin{align}
+\b{b}_z^T=\b{b}_{x}^T-\b{b}_y^T \b{R}^{-1}\b{Q}\, \mathcal{M}\left[\b{Q}^\dagger\b{A}_x\right],&&
+\b{A}_z =\b{A}_x - \b{Q}\, \mathcal{M}\left[\b{Q}^\dagger\b{A}_x\right].
+\end{align}
+
+A similar analysis can be performed when $\b{B}$ is generalized lower-triangular, which in the Wiener filtering theory corresponds to anti-causal filtering. The main difference in this case is that $\b{A}_y$ needs to be decomposed as $\b{Q}'\b{L}$, where $\b{L}$ is lower-triangular. 
+
+\appendix
+
+\setcounter{equation}{0}
+\setcounter{figure}{0}
+\renewcommand{\theequation}{A\arabic{equation}}
+\renewcommand{\thefigure}{A\arabic{figure}}
+
+\section*{Appendix A: Gaussian distributions defined via moments.}\label{sec:refFacts}
+
+The probability density function of a $d$-dimensional Gaussian random variable with the mean vector $\b{m}=(m_1, \ldots, m_{d})$ and covariance matrix $\mathbf{C}$ to take the value $\b{x}\in\mathbb{R}^d$ is given by
+\begin{equation}\label{eq:gaussianp}
+p(\b{x})=(2\pi)^{-d/2}\left(\t{det}(\mathbf{C})\right)^{-1/2}\t{exp}\left(-\frac{1}{2}(\b{x}-\b{m})^T\mathbf{C}^{-1}(\b{x}-\b{m})\right),
+\end{equation}
+where $\mathbf{C}^{-1}$ is the inverse of the covariance. If $\b{C}$ is degenerate and thus non-invertible, the possible realizations of the random variable do not cover the whole space $\mathbb{R}^d$. Our convention when defining the probability density function for such variables is to assign $p(\b{x})=0$ to impossible samples, and, when dealing with possible samples, to use the Moore–Penrose pseudoinverse $\b{C}^+$ instead of $\b{C}^{-1}$ and the determinant of the non-degenerate projection of $\b{C}$ instead of $\t{det}(\b{C})$ in \eqref{eq:gaussianp}. This is consistent with the way degenerate distributions are handled in \texttt{scipy.stats}~\cite{scipy_mvn}.
+
+If the random variable consists of two stacked vectors, $\b{x}$ with the dimension $d_x$, and $\b{y}$ with the dimension $d_y$, and $\b{C}$ is their joint covariance matrix expressed in the block form as,  
+\begin{equation}
+\b{C}=\begin{pmatrix}
+\b{C}_{xx} & \b{C}_{xy}\\
+\b{C}_{yy} & \b{C}_{yy}
+\end{pmatrix},
+\end{equation} 
+the conditional probability density of $\b{x}$ given $\b{y}=\tilde{\b{y}}$ is Gaussian with the mean and covariance given by
+\begin{align}
+&\b{m}_\t{c}=\b{m}_x+\b{C}_{xy}\b{C}^{-1}_{yy}(\tilde{\b{y}}-\b{m}_y),\label{eq:condMean}
+\\
+&\b{C}_\t{c}=\b{C}_{xx}-\b{C}_{xy}\b{C}^{-1}_{yy}\b{C}_{yx}.\label{eq:condCov}
+\end{align}
+
+\setcounter{equation}{0}
+\setcounter{figure}{0}
+\renewcommand{\theequation}{B\arabic{equation}}
+\renewcommand{\thefigure}{B\arabic{figure}}
+
+\section*{Appendix B: Parametric derivatives and Fisher information.}
+
+A number of information-theoretic properties of distributions whose mean and covariance depend on some parameters $\b{\theta}$ are expressed via the logarithm of the probability density and its derivatives. For non-degenerate Gaussian distributions, they are given, respectively, by
+\begin{equation}\label{eq:llk}
+\t{ln}\,p(\b{x})=-\frac{1}{2}\Delta \b{x}^T\b{C}^{-1}\Delta \b{x}-\frac{1}{2}\t{ln}\,\t{det}(\b{C}),
+\end{equation}
+and
+\begin{equation}
+\frac{\partial\t{ln}\,p(\b{x})}{\partial \theta_i}=\frac{\partial \b{m}^T}{\partial \theta_i}\mathbf{C}^{-1}\Delta \b{x}+\frac{1}{2}\Delta \b{x}^T\mathbf{C}^{-1}\frac{\partial\mathbf{C}}{\partial \theta_i}\mathbf{C}^{-1}\Delta \b{x}-\frac{1}{2}\t{Tr}\left[\mathbf{C}^{-1}\frac{\partial\mathbf{C}}{\partial \theta_i}\right],
+\end{equation}
+where
+\begin{equation}
+\Delta \b{x} = \b{x}-\b{m}.
+\end{equation}
+The expression for the derivatives was obtained using $\partial\mathbf{C}^{-1}/\partial\theta=-\mathbf{C}^{-1}(\partial\mathbf{C}/\partial\theta)\mathbf{C}^{-1}$, and the fact that the matrix determinant equals the product of the eigenvalues.  
+The components of the Fisher information matrix $F_{ij}$ are given by (e.g.~\cite{akimoto_theoretical_2012})
+\begin{equation}
+F_{ij}=\frac{\partial \b{m}^T}{\partial \theta_i}\mathbf{C}^{-1}\frac{\partial \b{m}}{\partial \theta_j}+\frac{1}{2}\t{Tr}\left[\mathbf{C}^{-1}\frac{\partial\mathbf{C}}{\partial \theta_i}\mathbf{C}^{-1}\frac{\partial\mathbf{C}}{\partial \theta_j}\right],
+\end{equation} 
+and related to the log probability density as
+\begin{equation}\label{eq:FIMavg}
+F_{ij}=\left\langle \frac{\partial\t{ln}\,p(\b{x})}{\partial\theta_i} \frac{\partial\t{ln}\,p(\b{x})}{\partial\theta_j}\right\rangle=-\left\langle \frac{\partial^2\t{ln}\,p(\b{x})}{\partial \theta_i\partial\theta_j}\right\rangle.
+\end{equation}
+For completeness, here is also the expression for the second derivatives of the log probability density,
+\begin{align}
+\frac{\partial^2\t{ln}\,p(\b{x})}{\partial \theta_i\partial\theta_j}=
+&-F_{ij}+\frac{\partial^2 \b{m}^T}{\partial \theta_i\partial\theta_j}\mathbf{C}^{-1}\Delta \b{x} \nonumber\\
+&+\t{Tr}\left[\left(\frac{1}{2}\mathbf{C}^{-1}\frac{\partial^2 \mathbf{C}}{\partial \theta_i\partial \theta_j}\mathbf{C}^{-1}+\mathbf{C}^{-1}\frac{\partial \mathbf{C}}{\partial \theta_i}\frac{\partial \mathbf{C}^{-1}}{\partial \theta_j}\right)\left(\Delta \b{x}\Delta \b{x}^T - \mathbf{C}\right)\right].
+\end{align}
+
+
+\bibliography{references}
+
+\end{document}
