@@ -1,0 +1,51 @@
+:root {
+    --body: georgia, serif;
+    --link: hsl(0, 100%, 60%);
+}
+
+body {
+    font: 16px/24px var(--body);
+}
+
+p {
+    text-align: justify;
+}
+
+a {   
+    color: var(--link);
+}
+
+a:active {
+    color: var(--link);
+}
+
+.ltx_page_main {
+    width: 750px;
+    margin: 0 auto;
+    padding: 1em;
+}
+
+.ltx_authors,
+.ltx_role_author {
+    text-align:right; 
+    margin-top: 2em;
+    font-size: 100%;
+}
+.ltx_role_author .ltx_personname  {
+    font-size: 100%;
+}
+
+.ltx_dates{
+    text-align:right;
+    font-size: 100%;
+    margin-bottom: 2em;
+}
+
+.ltx_title_document{
+    font-size:220%;
+}
+
+.ltx_tag_section{
+    font-size:110%;
+    padding-right: 1em;
+}
