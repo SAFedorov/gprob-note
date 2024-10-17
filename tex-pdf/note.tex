@@ -59,7 +59,7 @@ Sergey Fedorov\\
 Probabilistic programs define statistical models as compositions of primitive distributions conditioned on observations.
 Inference of general conditional distributions is a hard task. 
 The computational overhead of general inference methods, such as Markov chain or Hamiltonian Monte-Carlo, can make it difficult for probabilistic programs to compete with problem-specific approaches. 
-For Gaussian random variables, however, this is not necessarily the case --- as conditional distributions can be found analytically, the overhead for their computation can be minimal.
+For Gaussian random variables, however, this is not necessarily the case---as the composition of distributions and their conditioning can be performed analytically, the overhead for their computation can be minimal.
 
 
 This note presents the background theory for \texttt{gprob}, a probabilistic programming package that specializes to Gaussian random variables. 
@@ -75,13 +75,66 @@ In \texttt{gprob}, all random arrays are represented in this way --- as affine m
 \begin{equation}
 x_{ijk\ldots}=\sum_\lambda e_\lambda a_{\lambda, ijk\ldots}+b_{ijk\ldots},
 \end{equation}
-where $\{e_\lambda\sim \mathcal{N}(0,1)\}$, $\lambda = 1,\ldots,n$ is the set of latent univariate normal variables, and $a$ and $b$ are numerical arrays with real or complex coefficients. The mean of $x_{ijk\ldots}$ equals $b_{ijk\ldots}$, and the covariance is
+where $\{e_\lambda\sim \mathcal{N}(0,1)\}$, $\lambda = 1,\ldots,n$ is a set of latent univariate normal variables, and $a$ and $b$ are numerical arrays with real or complex coefficients. The mean of $x_{ijk\ldots}$ equals $b_{ijk\ldots}$, and the covariance is
 \begin{equation}
 C_{ijk\ldots,rst\ldots}=\sum_{\lambda} a_{\lambda, ijk\ldots} a^*_{\lambda, rst\ldots},
 \end{equation}
 where $rst\ldots$ run over the same set of indices as $ijk\ldots$ and $^*$ denotes complex conjugation.
 
-New latent variables are allocated during calls to \texttt{normal()}. For example, \texttt{normal(0, 1)} produces one latent variable, and \texttt{normal(size=sz)}, where \texttt{sz} is integer, produces \texttt{sz} new latent variables. A global inventory of all latent variables is maintained, but their joint distributions are only materialized within individual arrays. This has an effect on the memory footprint. Roughly speaking, if one random variable takes $m$ bytes, then two arrays of $n$ variables each will take $m\times(2\times n^2)$ bytes, and not $m\times (2\times n)^2$ bytes. 
+New latent variables are allocated during calls to \texttt{normal()}. For example, \texttt{normal(0, 1)} produces one latent variable, and \texttt{normal(size=sz)}, where \texttt{sz} is integer, produces \texttt{sz} new latent variables. A global inventory of all latent variables is maintained, but their joint distributions are only materialized within individual arrays. This has an effect on the memory footprint. Roughly speaking, if one random variable takes $m$ bytes, then two arrays of $n$ variables each will take $m\times(2\times n^2)$ bytes, and not $m\times (2\times n)^2$ bytes.
+
+
+Linear operations in \texttt{gprob}, such as addition or concatenation, produce new random arrays.
+The set of the latent variables of the result is a union of the sets of the latent variables of the operands. The $b$ of the operation result is simply the operation applied to the $b$s of the operands. The $a$ of the operation result is found by first extending the $a$s of the operands along their first dimension by zero entries, such that they all map the same union vector of latent variables, and then performing the operation iteratively over the first dimension of the extended $a$s. (In practice, no iteration takes place, but the operations on $a$s are vectorized.) To give a concrete example, the sum of two one-dimensional random variables $\b{x}$ and $\b{y}$ defined by the maps written in the matrix form as
+\begin{equation}
+\b{x}=
+\begin{pmatrix}
+1 & 2\\
+0 & 3\\
+\end{pmatrix}
+\begin{pmatrix}
+e_1\\ 
+e_2\\
+\end{pmatrix}
++
+\begin{pmatrix}
+4\\
+5\\
+\end{pmatrix},
+\qquad
+\b{y}=
+\begin{pmatrix}
+1 & 2\\
+3 & 0\\
+\end{pmatrix}
+\begin{pmatrix}
+e_2\\
+e_3\\
+\end{pmatrix}
++
+\begin{pmatrix}
+-7\\
+1\\
+\end{pmatrix},
+\end{equation}
+is anther variable, $\b{z}=\b{x}+\b{y}$, whose map is
+\begin{equation}
+\b{z}=
+\begin{pmatrix}
+1 & 3 & 2\\
+0 & 6 & 0\\
+\end{pmatrix}
+\begin{pmatrix}
+e_1\\
+e_2\\
+e_3\\
+\end{pmatrix}
++
+\begin{pmatrix}
+-3\\
+6\\
+\end{pmatrix}.
+\end{equation}
 
 
 \section{Conditioning.}

@@ -2,8 +2,8 @@
 <head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <title>gprob note</title>
-<!--Generated on Wed Oct 16 14:26:12 2024 by LaTeXML (version 0.8.8) http://dlmf.nist.gov/LaTeXML/.-->
-<!--Document created on October 16, 2024.-->
+<!--Generated on Thu Oct 17 10:00:42 2024 by LaTeXML (version 0.8.8) http://dlmf.nist.gov/LaTeXML/.-->
+<!--Document created on October 17, 2024.-->
 
 <link rel="stylesheet" href="LaTeXML.css" type="text/css">
 <link rel="stylesheet" href="ltx-article.css" type="text/css">
@@ -25,13 +25,13 @@ Sergey Fedorov
 <br class="ltx_break">Copenhagen, Denmark</em>
 </span></span>
 </div>
-<div class="ltx_dates">(October 16, 2024)</div>
+<div class="ltx_dates">(October 17, 2024)</div>
 
 <div id="p1" class="ltx_para">
 <p class="ltx_p">Probabilistic programs define statistical models as compositions of primitive distributions conditioned on observations.
 Inference of general conditional distributions is a hard task.
 The computational overhead of general inference methods, such as Markov chain or Hamiltonian Monte-Carlo, can make it difficult for probabilistic programs to compete with problem-specific approaches.
-For Gaussian random variables, however, this is not necessarily the case — as conditional distributions can be found analytically, the overhead for their computation can be minimal.</p>
+For Gaussian random variables, however, this is not necessarily the case—as the composition of distributions and their conditioning can be performed analytically, the overhead for their computation can be minimal.</p>
 </div>
 <div id="p2" class="ltx_para">
 <p class="ltx_p">This note presents the background theory for <span class="ltx_text ltx_font_typewriter">gprob</span>, a probabilistic programming package that specializes to Gaussian random variables.</p>
@@ -61,7 +61,7 @@ For Gaussian random variables, however, this is not necessarily the case — as 
 <td rowspan="1" class="ltx_eqn_cell ltx_eqn_eqno ltx_align_middle ltx_align_right"><span class="ltx_tag ltx_tag_equation ltx_align_right">(2)</span></td>
 </tr></tbody>
 </table>
-<p class="ltx_p">where <math id="S1.p1.m4" class="ltx_Math" alttext="\{e_{\lambda}\sim\mathcal{N}(0,1)\}" display="inline"><mrow><mo stretchy="false">{</mo><mrow><msub><mi>e</mi><mi>λ</mi></msub><mo>∼</mo><mrow><mi class="ltx_font_mathcaligraphic">𝒩</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mn>0</mn><mo>,</mo><mn>1</mn><mo stretchy="false">)</mo></mrow></mrow></mrow><mo stretchy="false">}</mo></mrow></math>, <math id="S1.p1.m5" class="ltx_Math" alttext="\lambda=1,\ldots,n" display="inline"><mrow><mi>λ</mi><mo>=</mo><mrow><mn>1</mn><mo>,</mo><mi mathvariant="normal">…</mi><mo>,</mo><mi>n</mi></mrow></mrow></math> is the set of latent univariate normal variables, and <math id="S1.p1.m6" class="ltx_Math" alttext="a" display="inline"><mi>a</mi></math> and <math id="S1.p1.m7" class="ltx_Math" alttext="b" display="inline"><mi>b</mi></math> are numerical arrays with real or complex coefficients. The mean of <math id="S1.p1.m8" class="ltx_Math" alttext="x_{ijk\ldots}" display="inline"><msub><mi>x</mi><mrow><mi>i</mi><mo>⁢</mo><mi>j</mi><mo>⁢</mo><mi>k</mi><mo>⁢</mo><mi mathvariant="normal">…</mi></mrow></msub></math> equals <math id="S1.p1.m9" class="ltx_Math" alttext="b_{ijk\ldots}" display="inline"><msub><mi>b</mi><mrow><mi>i</mi><mo>⁢</mo><mi>j</mi><mo>⁢</mo><mi>k</mi><mo>⁢</mo><mi mathvariant="normal">…</mi></mrow></msub></math>, and the covariance is</p>
+<p class="ltx_p">where <math id="S1.p1.m4" class="ltx_Math" alttext="\{e_{\lambda}\sim\mathcal{N}(0,1)\}" display="inline"><mrow><mo stretchy="false">{</mo><mrow><msub><mi>e</mi><mi>λ</mi></msub><mo>∼</mo><mrow><mi class="ltx_font_mathcaligraphic">𝒩</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mn>0</mn><mo>,</mo><mn>1</mn><mo stretchy="false">)</mo></mrow></mrow></mrow><mo stretchy="false">}</mo></mrow></math>, <math id="S1.p1.m5" class="ltx_Math" alttext="\lambda=1,\ldots,n" display="inline"><mrow><mi>λ</mi><mo>=</mo><mrow><mn>1</mn><mo>,</mo><mi mathvariant="normal">…</mi><mo>,</mo><mi>n</mi></mrow></mrow></math> is a set of latent univariate normal variables, and <math id="S1.p1.m6" class="ltx_Math" alttext="a" display="inline"><mi>a</mi></math> and <math id="S1.p1.m7" class="ltx_Math" alttext="b" display="inline"><mi>b</mi></math> are numerical arrays with real or complex coefficients. The mean of <math id="S1.p1.m8" class="ltx_Math" alttext="x_{ijk\ldots}" display="inline"><msub><mi>x</mi><mrow><mi>i</mi><mo>⁢</mo><mi>j</mi><mo>⁢</mo><mi>k</mi><mo>⁢</mo><mi mathvariant="normal">…</mi></mrow></msub></math> equals <math id="S1.p1.m9" class="ltx_Math" alttext="b_{ijk\ldots}" display="inline"><msub><mi>b</mi><mrow><mi>i</mi><mo>⁢</mo><mi>j</mi><mo>⁢</mo><mi>k</mi><mo>⁢</mo><mi mathvariant="normal">…</mi></mrow></msub></math>, and the covariance is</p>
 <table id="S1.E3" class="ltx_equation ltx_eqn_table">
 
 <tbody><tr class="ltx_equation ltx_eqn_row ltx_align_baseline">
@@ -77,6 +77,48 @@ For Gaussian random variables, however, this is not necessarily the case — as 
 <div id="S1.p2" class="ltx_para">
 <p class="ltx_p">New latent variables are allocated during calls to <span class="ltx_text ltx_font_typewriter">normal()</span>. For example, <span class="ltx_text ltx_font_typewriter">normal(0, 1)</span> produces one latent variable, and <span class="ltx_text ltx_font_typewriter">normal(size=sz)</span>, where <span class="ltx_text ltx_font_typewriter">sz</span> is integer, produces <span class="ltx_text ltx_font_typewriter">sz</span> new latent variables. A global inventory of all latent variables is maintained, but their joint distributions are only materialized within individual arrays. This has an effect on the memory footprint. Roughly speaking, if one random variable takes <math id="S1.p2.m1" class="ltx_Math" alttext="m" display="inline"><mi>m</mi></math> bytes, then two arrays of <math id="S1.p2.m2" class="ltx_Math" alttext="n" display="inline"><mi>n</mi></math> variables each will take <math id="S1.p2.m3" class="ltx_Math" alttext="m\times(2\times n^{2})" display="inline"><mrow><mi>m</mi><mo lspace="0.222em" rspace="0.222em">×</mo><mrow><mo stretchy="false">(</mo><mrow><mn>2</mn><mo lspace="0.222em" rspace="0.222em">×</mo><msup><mi>n</mi><mn>2</mn></msup></mrow><mo stretchy="false">)</mo></mrow></mrow></math> bytes, and not <math id="S1.p2.m4" class="ltx_Math" alttext="m\times(2\times n)^{2}" display="inline"><mrow><mi>m</mi><mo lspace="0.222em" rspace="0.222em">×</mo><msup><mrow><mo stretchy="false">(</mo><mrow><mn>2</mn><mo lspace="0.222em" rspace="0.222em">×</mo><mi>n</mi></mrow><mo stretchy="false">)</mo></mrow><mn>2</mn></msup></mrow></math> bytes.</p>
 </div>
+<div id="S1.p3" class="ltx_para">
+<p class="ltx_p">Linear operations in <span class="ltx_text ltx_font_typewriter">gprob</span>, such as addition or concatenation, produce new random arrays.
+The set of the latent variables of the result is a union of the sets of the latent variables of the operands. The <math id="S1.p3.m1" class="ltx_Math" alttext="b" display="inline"><mi>b</mi></math> of the operation result is simply the operation applied to the <math id="S1.p3.m2" class="ltx_Math" alttext="b" display="inline"><mi>b</mi></math>s of the operands. The <math id="S1.p3.m3" class="ltx_Math" alttext="a" display="inline"><mi>a</mi></math> of the operation result is found by first extending the <math id="S1.p3.m4" class="ltx_Math" alttext="a" display="inline"><mi>a</mi></math>s of the operands along their first dimension by zero entries, such that they all map the same union vector of latent variables, and then performing the operation iteratively over the first dimension of the extended <math id="S1.p3.m5" class="ltx_Math" alttext="a" display="inline"><mi>a</mi></math>s. (In practice, no iteration takes place, but the operations on <math id="S1.p3.m6" class="ltx_Math" alttext="a" display="inline"><mi>a</mi></math>s are vectorized.) To give a concrete example, the sum of two one-dimensional random variables <math id="S1.p3.m7" class="ltx_Math" alttext="\mathbf{x}" display="inline"><mi>𝐱</mi></math> and <math id="S1.p3.m8" class="ltx_Math" alttext="\mathbf{y}" display="inline"><mi>𝐲</mi></math> defined by the maps written in the matrix form as</p>
+<table id="S1.E4" class="ltx_equation ltx_eqn_table">
+
+<tbody><tr class="ltx_equation ltx_eqn_row ltx_align_baseline">
+<td class="ltx_eqn_cell ltx_eqn_center_padleft"></td>
+<td class="ltx_eqn_cell ltx_align_center"><math id="S1.E4.m1" class="ltx_Math" alttext="\mathbf{x}=\begin{pmatrix}1&amp;2\\
+0&amp;3\\
+\end{pmatrix}\begin{pmatrix}e_{1}\\
+e_{2}\\
+\end{pmatrix}+\begin{pmatrix}4\\
+5\\
+\end{pmatrix},\qquad\mathbf{y}=\begin{pmatrix}1&amp;2\\
+3&amp;0\\
+\end{pmatrix}\begin{pmatrix}e_{2}\\
+e_{3}\\
+\end{pmatrix}+\begin{pmatrix}-7\\
+1\\
+\end{pmatrix}," display="block"><mrow><mrow><mrow><mi>𝐱</mi><mo>=</mo><mrow><mrow><mrow><mo>(</mo><mtable columnspacing="5pt" displaystyle="true" rowspacing="0pt"><mtr><mtd><mn>1</mn></mtd><mtd><mn>2</mn></mtd></mtr><mtr><mtd><mn>0</mn></mtd><mtd><mn>3</mn></mtd></mtr></mtable><mo>)</mo></mrow><mo>⁢</mo><mrow><mo>(</mo><mtable displaystyle="true" rowspacing="0pt"><mtr><mtd><msub><mi>e</mi><mn>1</mn></msub></mtd></mtr><mtr><mtd><msub><mi>e</mi><mn>2</mn></msub></mtd></mtr></mtable><mo>)</mo></mrow></mrow><mo>+</mo><mrow><mo>(</mo><mtable displaystyle="true" rowspacing="0pt"><mtr><mtd><mn>4</mn></mtd></mtr><mtr><mtd><mn>5</mn></mtd></mtr></mtable><mo>)</mo></mrow></mrow></mrow><mo rspace="2.167em">,</mo><mrow><mi>𝐲</mi><mo>=</mo><mrow><mrow><mrow><mo>(</mo><mtable columnspacing="5pt" displaystyle="true" rowspacing="0pt"><mtr><mtd><mn>1</mn></mtd><mtd><mn>2</mn></mtd></mtr><mtr><mtd><mn>3</mn></mtd><mtd><mn>0</mn></mtd></mtr></mtable><mo>)</mo></mrow><mo>⁢</mo><mrow><mo>(</mo><mtable displaystyle="true" rowspacing="0pt"><mtr><mtd><msub><mi>e</mi><mn>2</mn></msub></mtd></mtr><mtr><mtd><msub><mi>e</mi><mn>3</mn></msub></mtd></mtr></mtable><mo>)</mo></mrow></mrow><mo>+</mo><mrow><mo>(</mo><mtable displaystyle="true" rowspacing="0pt"><mtr><mtd><mrow><mo>−</mo><mn>7</mn></mrow></mtd></mtr><mtr><mtd><mn>1</mn></mtd></mtr></mtable><mo>)</mo></mrow></mrow></mrow></mrow><mo>,</mo></mrow></math></td>
+<td class="ltx_eqn_cell ltx_eqn_center_padright"></td>
+<td rowspan="1" class="ltx_eqn_cell ltx_eqn_eqno ltx_align_middle ltx_align_right"><span class="ltx_tag ltx_tag_equation ltx_align_right">(4)</span></td>
+</tr></tbody>
+</table>
+<p class="ltx_p">is anther variable, <math id="S1.p3.m9" class="ltx_Math" alttext="\mathbf{z}=\mathbf{x}+\mathbf{y}" display="inline"><mrow><mi>𝐳</mi><mo>=</mo><mrow><mi>𝐱</mi><mo>+</mo><mi>𝐲</mi></mrow></mrow></math>, whose map is</p>
+<table id="S1.E5" class="ltx_equation ltx_eqn_table">
+
+<tbody><tr class="ltx_equation ltx_eqn_row ltx_align_baseline">
+<td class="ltx_eqn_cell ltx_eqn_center_padleft"></td>
+<td class="ltx_eqn_cell ltx_align_center"><math id="S1.E5.m1" class="ltx_Math" alttext="\mathbf{z}=\begin{pmatrix}1&amp;3&amp;2\\
+0&amp;6&amp;0\\
+\end{pmatrix}\begin{pmatrix}e_{1}\\
+e_{2}\\
+e_{3}\\
+\end{pmatrix}+\begin{pmatrix}-3\\
+6\\
+\end{pmatrix}." display="block"><mrow><mrow><mi>𝐳</mi><mo>=</mo><mrow><mrow><mrow><mo>(</mo><mtable columnspacing="5pt" displaystyle="true" rowspacing="0pt"><mtr><mtd><mn>1</mn></mtd><mtd><mn>3</mn></mtd><mtd><mn>2</mn></mtd></mtr><mtr><mtd><mn>0</mn></mtd><mtd><mn>6</mn></mtd><mtd><mn>0</mn></mtd></mtr></mtable><mo>)</mo></mrow><mo>⁢</mo><mrow><mo>(</mo><mtable displaystyle="true" rowspacing="0pt"><mtr><mtd><msub><mi>e</mi><mn>1</mn></msub></mtd></mtr><mtr><mtd><msub><mi>e</mi><mn>2</mn></msub></mtd></mtr><mtr><mtd><msub><mi>e</mi><mn>3</mn></msub></mtd></mtr></mtable><mo>)</mo></mrow></mrow><mo>+</mo><mrow><mo>(</mo><mtable displaystyle="true" rowspacing="0pt"><mtr><mtd><mrow><mo>−</mo><mn>3</mn></mrow></mtd></mtr><mtr><mtd><mn>6</mn></mtd></mtr></mtable><mo>)</mo></mrow></mrow></mrow><mo lspace="0em">.</mo></mrow></math></td>
+<td class="ltx_eqn_cell ltx_eqn_center_padright"></td>
+<td rowspan="1" class="ltx_eqn_cell ltx_eqn_eqno ltx_align_middle ltx_align_right"><span class="ltx_tag ltx_tag_equation ltx_align_right">(5)</span></td>
+</tr></tbody>
+</table>
+</div>
 </section>
 <section id="S2" class="ltx_section">
 <h2 class="ltx_title ltx_title_section">
@@ -91,14 +133,14 @@ In this case, one can think of the conditioning as creating a version <math id="
 </div>
 <div id="S2.p3" class="ltx_para">
 <p class="ltx_p">The variables <math id="S2.p3.m1" class="ltx_Math" alttext="\mathbf{x}" display="inline"><mi>𝐱</mi></math> and <math id="S2.p3.m2" class="ltx_Math" alttext="\mathbf{y}" display="inline"><mi>𝐲</mi></math> take values in <math id="S2.p3.m3" class="ltx_Math" alttext="\mathbb{R}^{d_{x}}" display="inline"><msup><mi>ℝ</mi><msub><mi>d</mi><mi>x</mi></msub></msup></math> and <math id="S2.p3.m4" class="ltx_Math" alttext="\mathbb{R}^{d_{y}}" display="inline"><msup><mi>ℝ</mi><msub><mi>d</mi><mi>y</mi></msub></msup></math>, and are represented by the maps of the same vector of latent variables <math id="S2.p3.m5" class="ltx_Math" alttext="\mathbf{e}=(e_{1},\ldots,e_{n})" display="inline"><mrow><mi>𝐞</mi><mo>=</mo><mrow><mo stretchy="false">(</mo><msub><mi>e</mi><mn>1</mn></msub><mo>,</mo><mi mathvariant="normal">…</mi><mo>,</mo><msub><mi>e</mi><mi>n</mi></msub><mo stretchy="false">)</mo></mrow></mrow></math>,</p>
-<table id="S2.E4" class="ltx_equation ltx_eqn_table">
+<table id="S2.E6" class="ltx_equation ltx_eqn_table">
 
 <tbody><tr class="ltx_equation ltx_eqn_row ltx_align_baseline">
 <td class="ltx_eqn_cell ltx_eqn_center_padleft"></td>
-<td class="ltx_eqn_cell ltx_align_center"><math id="S2.E4.m1" class="ltx_Math" alttext="\mathbf{x}=\mathbf{A}_{x}^{T}\mathbf{e}+\mathbf{b}_{x},\qquad\mathbf{y}=%
+<td class="ltx_eqn_cell ltx_align_center"><math id="S2.E6.m1" class="ltx_Math" alttext="\mathbf{x}=\mathbf{A}_{x}^{T}\mathbf{e}+\mathbf{b}_{x},\qquad\mathbf{y}=%
 \mathbf{A}_{y}^{T}\mathbf{e}+\mathbf{b}_{y}," display="block"><mrow><mrow><mrow><mi>𝐱</mi><mo>=</mo><mrow><mrow><msubsup><mi>𝐀</mi><mi>x</mi><mi>T</mi></msubsup><mo>⁢</mo><mi>𝐞</mi></mrow><mo>+</mo><msub><mi>𝐛</mi><mi>x</mi></msub></mrow></mrow><mo rspace="2.167em">,</mo><mrow><mi>𝐲</mi><mo>=</mo><mrow><mrow><msubsup><mi>𝐀</mi><mi>y</mi><mi>T</mi></msubsup><mo>⁢</mo><mi>𝐞</mi></mrow><mo>+</mo><msub><mi>𝐛</mi><mi>y</mi></msub></mrow></mrow></mrow><mo>,</mo></mrow></math></td>
 <td class="ltx_eqn_cell ltx_eqn_center_padright"></td>
-<td rowspan="1" class="ltx_eqn_cell ltx_eqn_eqno ltx_align_middle ltx_align_right"><span class="ltx_tag ltx_tag_equation ltx_align_right">(4)</span></td>
+<td rowspan="1" class="ltx_eqn_cell ltx_eqn_eqno ltx_align_middle ltx_align_right"><span class="ltx_tag ltx_tag_equation ltx_align_right">(6)</span></td>
 </tr></tbody>
 </table>
 <p class="ltx_p">where <math id="S2.p3.m6" class="ltx_Math" alttext="\mathbf{A}_{x}" display="inline"><msub><mi>𝐀</mi><mi>x</mi></msub></math> and <math id="S2.p3.m7" class="ltx_Math" alttext="\mathbf{A}_{y}" display="inline"><msub><mi>𝐀</mi><mi>y</mi></msub></math> are, respectively, <math id="S2.p3.m8" class="ltx_Math" alttext="n\times d_{x}" display="inline"><mrow><mi>n</mi><mo lspace="0.222em" rspace="0.222em">×</mo><msub><mi>d</mi><mi>x</mi></msub></mrow></math> and <math id="S2.p3.m9" class="ltx_Math" alttext="n\times d_{y}" display="inline"><mrow><mi>n</mi><mo lspace="0.222em" rspace="0.222em">×</mo><msub><mi>d</mi><mi>y</mi></msub></mrow></math> matrices, and <math id="S2.p3.m10" class="ltx_Math" alttext="\mathbf{b}_{x}" display="inline"><msub><mi>𝐛</mi><mi>x</mi></msub></math> and <math id="S2.p3.m11" class="ltx_Math" alttext="\mathbf{b}_{y}" display="inline"><msub><mi>𝐛</mi><mi>y</mi></msub></math> are <math id="S2.p3.m12" class="ltx_Math" alttext="d_{x}" display="inline"><msub><mi>d</mi><mi>x</mi></msub></math> and <math id="S2.p3.m13" class="ltx_Math" alttext="d_{y}" display="inline"><msub><mi>d</mi><mi>y</mi></msub></math>-size mean vectors. The rank of the condition matrix, <math id="S2.p3.m14" class="ltx_Math" alttext="\mathbf{A}_{y}" display="inline"><msub><mi>𝐀</mi><mi>y</mi></msub></math>, is assumed to be full and equal to <math id="S2.p3.m15" class="ltx_Math" alttext="d_{y}\leq n" display="inline"><mrow><msub><mi>d</mi><mi>y</mi></msub><mo>≤</mo><mi>n</mi></mrow></math>, which means that the conditions are neither incompatible nor tautological. If the rank of <math id="S2.p3.m16" class="ltx_Math" alttext="\mathbf{A}_{y}" display="inline"><msub><mi>𝐀</mi><mi>y</mi></msub></math> is less than <math id="S2.p3.m17" class="ltx_Math" alttext="d_{y}" display="inline"><msub><mi>d</mi><mi>y</mi></msub></math>, yet the conditions are compatible, some of them can be eliminated from <math id="S2.p3.m18" class="ltx_Math" alttext="\mathbf{A}_{y}" display="inline"><msub><mi>𝐀</mi><mi>y</mi></msub></math>.</p>
@@ -106,68 +148,68 @@ In this case, one can think of the conditioning as creating a version <math id="
 <div id="S2.p4" class="ltx_para">
 <p class="ltx_p">Conditioning splits the latent space into two orthogonal subspaces—one in which the allowed values of the latent variables are fully determined to yield the observed value of <math id="S2.p4.m1" class="ltx_Math" alttext="\mathbf{y}" display="inline"><mi>𝐲</mi></math>, and one in which the values of the latent variables are unconstrained.
 The conditional mean is found by evaluating <math id="S2.p4.m2" class="ltx_Math" alttext="\mathbf{x}" display="inline"><mi>𝐱</mi></math> at the value of the latent vector <math id="S2.p4.m3" class="ltx_Math" alttext="\tilde{\mathbf{e}}" display="inline"><mover accent="true"><mi>𝐞</mi><mo>~</mo></mover></math> from the first subspace, which satisfies</p>
-<table id="S2.E5" class="ltx_equation ltx_eqn_table">
-
-<tbody><tr class="ltx_equation ltx_eqn_row ltx_align_baseline">
-<td class="ltx_eqn_cell ltx_eqn_center_padleft"></td>
-<td class="ltx_eqn_cell ltx_align_center"><math id="S2.E5.m1" class="ltx_Math" alttext="\mathbf{A}^{T}_{y}\tilde{\mathbf{e}}+\mathbf{b}_{y}=0." display="block"><mrow><mrow><mrow><mrow><msubsup><mi>𝐀</mi><mi>y</mi><mi>T</mi></msubsup><mo>⁢</mo><mover accent="true"><mi>𝐞</mi><mo>~</mo></mover></mrow><mo>+</mo><msub><mi>𝐛</mi><mi>y</mi></msub></mrow><mo>=</mo><mn>0</mn></mrow><mo lspace="0em">.</mo></mrow></math></td>
-<td class="ltx_eqn_cell ltx_eqn_center_padright"></td>
-<td rowspan="1" class="ltx_eqn_cell ltx_eqn_eqno ltx_align_middle ltx_align_right"><span class="ltx_tag ltx_tag_equation ltx_align_right">(5)</span></td>
-</tr></tbody>
-</table>
-<p class="ltx_p">This value can be formally found as</p>
-<table id="S2.E6" class="ltx_equation ltx_eqn_table">
-
-<tbody><tr class="ltx_equation ltx_eqn_row ltx_align_baseline">
-<td class="ltx_eqn_cell ltx_eqn_center_padleft"></td>
-<td class="ltx_eqn_cell ltx_align_center"><math id="S2.E6.m1" class="ltx_Math" alttext="\tilde{\mathbf{e}}=-\left(\mathbf{A}^{+}_{y}\right)^{T}\mathbf{b}_{y}," display="block"><mrow><mrow><mover accent="true"><mi>𝐞</mi><mo>~</mo></mover><mo>=</mo><mrow><mo>−</mo><mrow><msup><mrow><mo>(</mo><msubsup><mi>𝐀</mi><mi>y</mi><mo>+</mo></msubsup><mo>)</mo></mrow><mi>T</mi></msup><mo>⁢</mo><msub><mi>𝐛</mi><mi>y</mi></msub></mrow></mrow></mrow><mo>,</mo></mrow></math></td>
-<td class="ltx_eqn_cell ltx_eqn_center_padright"></td>
-<td rowspan="1" class="ltx_eqn_cell ltx_eqn_eqno ltx_align_middle ltx_align_right"><span class="ltx_tag ltx_tag_equation ltx_align_right">(6)</span></td>
-</tr></tbody>
-</table>
-<p class="ltx_p">where <math id="S2.p4.m4" class="ltx_Math" alttext="\mathbf{A}_{y}^{+}" display="inline"><msubsup><mi>𝐀</mi><mi>y</mi><mo>+</mo></msubsup></math> is the Moore–Penrose pseudoinverse of <math id="S2.p4.m5" class="ltx_Math" alttext="\mathbf{A}_{y}" display="inline"><msub><mi>𝐀</mi><mi>y</mi></msub></math>. (As <math id="S2.p4.m6" class="ltx_Math" alttext="\mathbf{A}_{y}" display="inline"><msub><mi>𝐀</mi><mi>y</mi></msub></math> is normally not a square matrix, it does not have an inverse). To obtain <math id="S2.p4.m7" class="ltx_Math" alttext="\tilde{\mathbf{e}}" display="inline"><mover accent="true"><mi>𝐞</mi><mo>~</mo></mover></math> in practice, it is more convenient to directly solve the system of equations in Eq. (<a href="#S2.E5" title="Equation 5 ‣ 2 Conditioning. ‣ gprob note" class="ltx_ref"><span class="ltx_text ltx_ref_tag">5</span></a>) in the least square sense. The mean of the conditional variable <math id="S2.p4.m8" class="ltx_Math" alttext="\mathbf{z}" display="inline"><mi>𝐳</mi></math>, <math id="S2.p4.m9" class="ltx_Math" alttext="\mathbf{b}_{z}" display="inline"><msub><mi>𝐛</mi><mi>z</mi></msub></math>, is then given by</p>
 <table id="S2.E7" class="ltx_equation ltx_eqn_table">
 
 <tbody><tr class="ltx_equation ltx_eqn_row ltx_align_baseline">
 <td class="ltx_eqn_cell ltx_eqn_center_padleft"></td>
-<td class="ltx_eqn_cell ltx_align_center"><math id="S2.E7.m1" class="ltx_Math" alttext="\mathbf{b}_{z}=\mathbf{b}_{x}-\mathbf{A}_{x}^{T}\left(\mathbf{A}^{+}_{y}\right%
-)^{T}\mathbf{b}_{y}." display="block"><mrow><mrow><msub><mi>𝐛</mi><mi>z</mi></msub><mo>=</mo><mrow><msub><mi>𝐛</mi><mi>x</mi></msub><mo>−</mo><mrow><msubsup><mi>𝐀</mi><mi>x</mi><mi>T</mi></msubsup><mo>⁢</mo><msup><mrow><mo>(</mo><msubsup><mi>𝐀</mi><mi>y</mi><mo>+</mo></msubsup><mo>)</mo></mrow><mi>T</mi></msup><mo>⁢</mo><msub><mi>𝐛</mi><mi>y</mi></msub></mrow></mrow></mrow><mo lspace="0em">.</mo></mrow></math></td>
+<td class="ltx_eqn_cell ltx_align_center"><math id="S2.E7.m1" class="ltx_Math" alttext="\mathbf{A}^{T}_{y}\tilde{\mathbf{e}}+\mathbf{b}_{y}=0." display="block"><mrow><mrow><mrow><mrow><msubsup><mi>𝐀</mi><mi>y</mi><mi>T</mi></msubsup><mo>⁢</mo><mover accent="true"><mi>𝐞</mi><mo>~</mo></mover></mrow><mo>+</mo><msub><mi>𝐛</mi><mi>y</mi></msub></mrow><mo>=</mo><mn>0</mn></mrow><mo lspace="0em">.</mo></mrow></math></td>
 <td class="ltx_eqn_cell ltx_eqn_center_padright"></td>
 <td rowspan="1" class="ltx_eqn_cell ltx_eqn_eqno ltx_align_middle ltx_align_right"><span class="ltx_tag ltx_tag_equation ltx_align_right">(7)</span></td>
+</tr></tbody>
+</table>
+<p class="ltx_p">This value can be formally found as</p>
+<table id="S2.E8" class="ltx_equation ltx_eqn_table">
+
+<tbody><tr class="ltx_equation ltx_eqn_row ltx_align_baseline">
+<td class="ltx_eqn_cell ltx_eqn_center_padleft"></td>
+<td class="ltx_eqn_cell ltx_align_center"><math id="S2.E8.m1" class="ltx_Math" alttext="\tilde{\mathbf{e}}=-\left(\mathbf{A}^{+}_{y}\right)^{T}\mathbf{b}_{y}," display="block"><mrow><mrow><mover accent="true"><mi>𝐞</mi><mo>~</mo></mover><mo>=</mo><mrow><mo>−</mo><mrow><msup><mrow><mo>(</mo><msubsup><mi>𝐀</mi><mi>y</mi><mo>+</mo></msubsup><mo>)</mo></mrow><mi>T</mi></msup><mo>⁢</mo><msub><mi>𝐛</mi><mi>y</mi></msub></mrow></mrow></mrow><mo>,</mo></mrow></math></td>
+<td class="ltx_eqn_cell ltx_eqn_center_padright"></td>
+<td rowspan="1" class="ltx_eqn_cell ltx_eqn_eqno ltx_align_middle ltx_align_right"><span class="ltx_tag ltx_tag_equation ltx_align_right">(8)</span></td>
+</tr></tbody>
+</table>
+<p class="ltx_p">where <math id="S2.p4.m4" class="ltx_Math" alttext="\mathbf{A}_{y}^{+}" display="inline"><msubsup><mi>𝐀</mi><mi>y</mi><mo>+</mo></msubsup></math> is the Moore–Penrose pseudoinverse of <math id="S2.p4.m5" class="ltx_Math" alttext="\mathbf{A}_{y}" display="inline"><msub><mi>𝐀</mi><mi>y</mi></msub></math>. (As <math id="S2.p4.m6" class="ltx_Math" alttext="\mathbf{A}_{y}" display="inline"><msub><mi>𝐀</mi><mi>y</mi></msub></math> is normally not a square matrix, it does not have an inverse). To obtain <math id="S2.p4.m7" class="ltx_Math" alttext="\tilde{\mathbf{e}}" display="inline"><mover accent="true"><mi>𝐞</mi><mo>~</mo></mover></math> in practice, it is more convenient to directly solve the system of equations in Eq. (<a href="#S2.E7" title="Equation 7 ‣ 2 Conditioning. ‣ gprob note" class="ltx_ref"><span class="ltx_text ltx_ref_tag">7</span></a>) in the least square sense. The mean of the conditional variable <math id="S2.p4.m8" class="ltx_Math" alttext="\mathbf{z}" display="inline"><mi>𝐳</mi></math>, <math id="S2.p4.m9" class="ltx_Math" alttext="\mathbf{b}_{z}" display="inline"><msub><mi>𝐛</mi><mi>z</mi></msub></math>, is then given by</p>
+<table id="S2.E9" class="ltx_equation ltx_eqn_table">
+
+<tbody><tr class="ltx_equation ltx_eqn_row ltx_align_baseline">
+<td class="ltx_eqn_cell ltx_eqn_center_padleft"></td>
+<td class="ltx_eqn_cell ltx_align_center"><math id="S2.E9.m1" class="ltx_Math" alttext="\mathbf{b}_{z}=\mathbf{b}_{x}-\mathbf{A}_{x}^{T}\left(\mathbf{A}^{+}_{y}\right%
+)^{T}\mathbf{b}_{y}." display="block"><mrow><mrow><msub><mi>𝐛</mi><mi>z</mi></msub><mo>=</mo><mrow><msub><mi>𝐛</mi><mi>x</mi></msub><mo>−</mo><mrow><msubsup><mi>𝐀</mi><mi>x</mi><mi>T</mi></msubsup><mo>⁢</mo><msup><mrow><mo>(</mo><msubsup><mi>𝐀</mi><mi>y</mi><mo>+</mo></msubsup><mo>)</mo></mrow><mi>T</mi></msup><mo>⁢</mo><msub><mi>𝐛</mi><mi>y</mi></msub></mrow></mrow></mrow><mo lspace="0em">.</mo></mrow></math></td>
+<td class="ltx_eqn_cell ltx_eqn_center_padright"></td>
+<td rowspan="1" class="ltx_eqn_cell ltx_eqn_eqno ltx_align_middle ltx_align_right"><span class="ltx_tag ltx_tag_equation ltx_align_right">(9)</span></td>
 </tr></tbody>
 </table>
 </div>
 <div id="S2.p5" class="ltx_para">
 <p class="ltx_p">The conditional map, <math id="S2.p5.m1" class="ltx_Math" alttext="\mathbf{A}_{z}" display="inline"><msub><mi>𝐀</mi><mi>z</mi></msub></math>, is found by left-multiplying <math id="S2.p5.m2" class="ltx_Math" alttext="\mathbf{A}_{x}" display="inline"><msub><mi>𝐀</mi><mi>x</mi></msub></math> by the projector on the latent subspace unaffected by the conditioning, i.e. the subspace orthogonal to the columns of the constraint matrix <math id="S2.p5.m3" class="ltx_Math" alttext="\mathbf{A}_{y}" display="inline"><msub><mi>𝐀</mi><mi>y</mi></msub></math>. The operator that performs the desired projection is <math id="S2.p5.m4" class="ltx_Math" alttext="\mathbf{I}-\mathbf{A}_{y}\mathbf{A}_{y}^{+}" display="inline"><mrow><mi>𝐈</mi><mo>−</mo><mrow><msub><mi>𝐀</mi><mi>y</mi></msub><mo>⁢</mo><msubsup><mi>𝐀</mi><mi>y</mi><mo>+</mo></msubsup></mrow></mrow></math>, where <math id="S2.p5.m5" class="ltx_Math" alttext="\mathbf{I}" display="inline"><mi>𝐈</mi></math> is the identity matrix, and the conditional map is</p>
-<table id="S2.E8" class="ltx_equation ltx_eqn_table">
-
-<tbody><tr class="ltx_equation ltx_eqn_row ltx_align_baseline">
-<td class="ltx_eqn_cell ltx_eqn_center_padleft"></td>
-<td class="ltx_eqn_cell ltx_align_center"><math id="S2.E8.m1" class="ltx_Math" alttext="\mathbf{A}_{z}=\mathbf{A}_{x}-\mathbf{A}_{y}\mathbf{A}^{+}_{y}\mathbf{A}_{x}." display="block"><mrow><mrow><msub><mi>𝐀</mi><mi>z</mi></msub><mo>=</mo><mrow><msub><mi>𝐀</mi><mi>x</mi></msub><mo>−</mo><mrow><msub><mi>𝐀</mi><mi>y</mi></msub><mo>⁢</mo><msubsup><mi>𝐀</mi><mi>y</mi><mo>+</mo></msubsup><mo>⁢</mo><msub><mi>𝐀</mi><mi>x</mi></msub></mrow></mrow></mrow><mo lspace="0em">.</mo></mrow></math></td>
-<td class="ltx_eqn_cell ltx_eqn_center_padright"></td>
-<td rowspan="1" class="ltx_eqn_cell ltx_eqn_eqno ltx_align_middle ltx_align_right"><span class="ltx_tag ltx_tag_equation ltx_align_right">(8)</span></td>
-</tr></tbody>
-</table>
-</div>
-<div id="S2.p6" class="ltx_para">
-<p class="ltx_p">One can verify that the conditional mean and covariance that follow from Eqs. (<a href="#S2.E7" title="Equation 7 ‣ 2 Conditioning. ‣ gprob note" class="ltx_ref"><span class="ltx_text ltx_ref_tag">7</span></a>-<a href="#S2.E8" title="Equation 8 ‣ 2 Conditioning. ‣ gprob note" class="ltx_ref"><span class="ltx_text ltx_ref_tag">8</span></a>) agree with those obtained based on the momentum representation of <math id="S2.p6.m1" class="ltx_Math" alttext="\mathbf{x}" display="inline"><mi>𝐱</mi></math> and <math id="S2.p6.m2" class="ltx_Math" alttext="\mathbf{y}" display="inline"><mi>𝐲</mi></math> (given in Appendix A). To make this comparison, we can use the facts that the cross-covariance matrix between <math id="S2.p6.m3" class="ltx_Math" alttext="\mathbf{x}" display="inline"><mi>𝐱</mi></math> and <math id="S2.p6.m4" class="ltx_Math" alttext="\mathbf{y}" display="inline"><mi>𝐲</mi></math> is</p>
-<table id="S2.E9" class="ltx_equation ltx_eqn_table">
-
-<tbody><tr class="ltx_equation ltx_eqn_row ltx_align_baseline">
-<td class="ltx_eqn_cell ltx_eqn_center_padleft"></td>
-<td class="ltx_eqn_cell ltx_align_center"><math id="S2.E9.m1" class="ltx_Math" alttext="\mathbf{C}_{xy}=\mathbf{A}_{x}^{T}\mathbf{A}_{y}," display="block"><mrow><mrow><msub><mi>𝐂</mi><mrow><mi>x</mi><mo>⁢</mo><mi>y</mi></mrow></msub><mo>=</mo><mrow><msubsup><mi>𝐀</mi><mi>x</mi><mi>T</mi></msubsup><mo>⁢</mo><msub><mi>𝐀</mi><mi>y</mi></msub></mrow></mrow><mo>,</mo></mrow></math></td>
-<td class="ltx_eqn_cell ltx_eqn_center_padright"></td>
-<td rowspan="1" class="ltx_eqn_cell ltx_eqn_eqno ltx_align_middle ltx_align_right"><span class="ltx_tag ltx_tag_equation ltx_align_right">(9)</span></td>
-</tr></tbody>
-</table>
-<p class="ltx_p">that <math id="S2.p6.m5" class="ltx_Math" alttext="\mathbf{P}=\mathbf{A}_{y}\mathbf{A}^{+}_{y}" display="inline"><mrow><mi>𝐏</mi><mo>=</mo><mrow><msub><mi>𝐀</mi><mi>y</mi></msub><mo>⁢</mo><msubsup><mi>𝐀</mi><mi>y</mi><mo>+</mo></msubsup></mrow></mrow></math> is an orthogonal projector satisfying <math id="S2.p6.m6" class="ltx_Math" alttext="\mathbf{P}^{2}=\mathbf{P}" display="inline"><mrow><msup><mi>𝐏</mi><mn>2</mn></msup><mo>=</mo><mi>𝐏</mi></mrow></math> and <math id="S2.p6.m7" class="ltx_Math" alttext="\mathbf{P}^{T}=\mathbf{P}" display="inline"><mrow><msup><mi>𝐏</mi><mi>T</mi></msup><mo>=</mo><mi>𝐏</mi></mrow></math>, and also that for a full-rank matrix <math id="S2.p6.m8" class="ltx_Math" alttext="\mathbf{A}_{y}" display="inline"><msub><mi>𝐀</mi><mi>y</mi></msub></math> the block <math id="S2.p6.m9" class="ltx_Math" alttext="\mathbf{C}_{yy}=\mathbf{A}^{T}_{y}\mathbf{A}_{y}" display="inline"><mrow><msub><mi>𝐂</mi><mrow><mi>y</mi><mo>⁢</mo><mi>y</mi></mrow></msub><mo>=</mo><mrow><msubsup><mi>𝐀</mi><mi>y</mi><mi>T</mi></msubsup><mo>⁢</mo><msub><mi>𝐀</mi><mi>y</mi></msub></mrow></mrow></math> is invertible, with its inverse being</p>
 <table id="S2.E10" class="ltx_equation ltx_eqn_table">
 
 <tbody><tr class="ltx_equation ltx_eqn_row ltx_align_baseline">
 <td class="ltx_eqn_cell ltx_eqn_center_padleft"></td>
-<td class="ltx_eqn_cell ltx_align_center"><math id="S2.E10.m1" class="ltx_Math" alttext="\mathbf{C}_{yy}^{-1}=\mathbf{A}^{+}_{y}\left(\mathbf{A}^{+}_{y}\right)^{T}." display="block"><mrow><mrow><msubsup><mi>𝐂</mi><mrow><mi>y</mi><mo>⁢</mo><mi>y</mi></mrow><mrow><mo>−</mo><mn>1</mn></mrow></msubsup><mo>=</mo><mrow><msubsup><mi>𝐀</mi><mi>y</mi><mo>+</mo></msubsup><mo>⁢</mo><msup><mrow><mo>(</mo><msubsup><mi>𝐀</mi><mi>y</mi><mo>+</mo></msubsup><mo>)</mo></mrow><mi>T</mi></msup></mrow></mrow><mo lspace="0em">.</mo></mrow></math></td>
+<td class="ltx_eqn_cell ltx_align_center"><math id="S2.E10.m1" class="ltx_Math" alttext="\mathbf{A}_{z}=\mathbf{A}_{x}-\mathbf{A}_{y}\mathbf{A}^{+}_{y}\mathbf{A}_{x}." display="block"><mrow><mrow><msub><mi>𝐀</mi><mi>z</mi></msub><mo>=</mo><mrow><msub><mi>𝐀</mi><mi>x</mi></msub><mo>−</mo><mrow><msub><mi>𝐀</mi><mi>y</mi></msub><mo>⁢</mo><msubsup><mi>𝐀</mi><mi>y</mi><mo>+</mo></msubsup><mo>⁢</mo><msub><mi>𝐀</mi><mi>x</mi></msub></mrow></mrow></mrow><mo lspace="0em">.</mo></mrow></math></td>
 <td class="ltx_eqn_cell ltx_eqn_center_padright"></td>
 <td rowspan="1" class="ltx_eqn_cell ltx_eqn_eqno ltx_align_middle ltx_align_right"><span class="ltx_tag ltx_tag_equation ltx_align_right">(10)</span></td>
+</tr></tbody>
+</table>
+</div>
+<div id="S2.p6" class="ltx_para">
+<p class="ltx_p">One can verify that the conditional mean and covariance that follow from Eqs. (<a href="#S2.E9" title="Equation 9 ‣ 2 Conditioning. ‣ gprob note" class="ltx_ref"><span class="ltx_text ltx_ref_tag">9</span></a>-<a href="#S2.E10" title="Equation 10 ‣ 2 Conditioning. ‣ gprob note" class="ltx_ref"><span class="ltx_text ltx_ref_tag">10</span></a>) agree with those obtained based on the momentum representation of <math id="S2.p6.m1" class="ltx_Math" alttext="\mathbf{x}" display="inline"><mi>𝐱</mi></math> and <math id="S2.p6.m2" class="ltx_Math" alttext="\mathbf{y}" display="inline"><mi>𝐲</mi></math> (given in Appendix A). To make this comparison, we can use the facts that the cross-covariance matrix between <math id="S2.p6.m3" class="ltx_Math" alttext="\mathbf{x}" display="inline"><mi>𝐱</mi></math> and <math id="S2.p6.m4" class="ltx_Math" alttext="\mathbf{y}" display="inline"><mi>𝐲</mi></math> is</p>
+<table id="S2.E11" class="ltx_equation ltx_eqn_table">
+
+<tbody><tr class="ltx_equation ltx_eqn_row ltx_align_baseline">
+<td class="ltx_eqn_cell ltx_eqn_center_padleft"></td>
+<td class="ltx_eqn_cell ltx_align_center"><math id="S2.E11.m1" class="ltx_Math" alttext="\mathbf{C}_{xy}=\mathbf{A}_{x}^{T}\mathbf{A}_{y}," display="block"><mrow><mrow><msub><mi>𝐂</mi><mrow><mi>x</mi><mo>⁢</mo><mi>y</mi></mrow></msub><mo>=</mo><mrow><msubsup><mi>𝐀</mi><mi>x</mi><mi>T</mi></msubsup><mo>⁢</mo><msub><mi>𝐀</mi><mi>y</mi></msub></mrow></mrow><mo>,</mo></mrow></math></td>
+<td class="ltx_eqn_cell ltx_eqn_center_padright"></td>
+<td rowspan="1" class="ltx_eqn_cell ltx_eqn_eqno ltx_align_middle ltx_align_right"><span class="ltx_tag ltx_tag_equation ltx_align_right">(11)</span></td>
+</tr></tbody>
+</table>
+<p class="ltx_p">that <math id="S2.p6.m5" class="ltx_Math" alttext="\mathbf{P}=\mathbf{A}_{y}\mathbf{A}^{+}_{y}" display="inline"><mrow><mi>𝐏</mi><mo>=</mo><mrow><msub><mi>𝐀</mi><mi>y</mi></msub><mo>⁢</mo><msubsup><mi>𝐀</mi><mi>y</mi><mo>+</mo></msubsup></mrow></mrow></math> is an orthogonal projector satisfying <math id="S2.p6.m6" class="ltx_Math" alttext="\mathbf{P}^{2}=\mathbf{P}" display="inline"><mrow><msup><mi>𝐏</mi><mn>2</mn></msup><mo>=</mo><mi>𝐏</mi></mrow></math> and <math id="S2.p6.m7" class="ltx_Math" alttext="\mathbf{P}^{T}=\mathbf{P}" display="inline"><mrow><msup><mi>𝐏</mi><mi>T</mi></msup><mo>=</mo><mi>𝐏</mi></mrow></math>, and also that for a full-rank matrix <math id="S2.p6.m8" class="ltx_Math" alttext="\mathbf{A}_{y}" display="inline"><msub><mi>𝐀</mi><mi>y</mi></msub></math> the block <math id="S2.p6.m9" class="ltx_Math" alttext="\mathbf{C}_{yy}=\mathbf{A}^{T}_{y}\mathbf{A}_{y}" display="inline"><mrow><msub><mi>𝐂</mi><mrow><mi>y</mi><mo>⁢</mo><mi>y</mi></mrow></msub><mo>=</mo><mrow><msubsup><mi>𝐀</mi><mi>y</mi><mi>T</mi></msubsup><mo>⁢</mo><msub><mi>𝐀</mi><mi>y</mi></msub></mrow></mrow></math> is invertible, with its inverse being</p>
+<table id="S2.E12" class="ltx_equation ltx_eqn_table">
+
+<tbody><tr class="ltx_equation ltx_eqn_row ltx_align_baseline">
+<td class="ltx_eqn_cell ltx_eqn_center_padleft"></td>
+<td class="ltx_eqn_cell ltx_align_center"><math id="S2.E12.m1" class="ltx_Math" alttext="\mathbf{C}_{yy}^{-1}=\mathbf{A}^{+}_{y}\left(\mathbf{A}^{+}_{y}\right)^{T}." display="block"><mrow><mrow><msubsup><mi>𝐂</mi><mrow><mi>y</mi><mo>⁢</mo><mi>y</mi></mrow><mrow><mo>−</mo><mn>1</mn></mrow></msubsup><mo>=</mo><mrow><msubsup><mi>𝐀</mi><mi>y</mi><mo>+</mo></msubsup><mo>⁢</mo><msup><mrow><mo>(</mo><msubsup><mi>𝐀</mi><mi>y</mi><mo>+</mo></msubsup><mo>)</mo></mrow><mi>T</mi></msup></mrow></mrow><mo lspace="0em">.</mo></mrow></math></td>
+<td class="ltx_eqn_cell ltx_eqn_center_padright"></td>
+<td rowspan="1" class="ltx_eqn_cell ltx_eqn_eqno ltx_align_middle ltx_align_right"><span class="ltx_tag ltx_tag_equation ltx_align_right">(12)</span></td>
 </tr></tbody>
 </table>
 </div>
@@ -183,34 +225,34 @@ The conditional mean is found by evaluating <math id="S2.p4.m2" class="ltx_Math"
 <p class="ltx_p">Causal conditioning can be performed trivially using the result of Sec. <a href="#S2" title="2 Conditioning. ‣ gprob note" class="ltx_ref"><span class="ltx_text ltx_ref_tag">2</span></a> by iterating over the elements of <math id="S3.p2.m1" class="ltx_Math" alttext="\mathbf{x}" display="inline"><mi>𝐱</mi></math> and each time selecting an appropriate range from <math id="S3.p2.m2" class="ltx_Math" alttext="\mathbf{y}" display="inline"><mi>𝐲</mi></math>. This would be, roughly speaking, <math id="S3.p2.m3" class="ltx_Math" alttext="d_{x}" display="inline"><msub><mi>d</mi><mi>x</mi></msub></math> time more computationally expensive than the simple conditioning of all <math id="S3.p2.m4" class="ltx_Math" alttext="x_{i}" display="inline"><msub><mi>x</mi><mi>i</mi></msub></math> on all <math id="S3.p2.m5" class="ltx_Math" alttext="y_{j}" display="inline"><msub><mi>y</mi><mi>j</mi></msub></math>. Fortunately, there is an algorithm that allows to causally condition all elements of <math id="S3.p2.m6" class="ltx_Math" alttext="\mathbf{x}" display="inline"><mi>𝐱</mi></math> in one go.</p>
 </div>
 <div id="S3.p3" class="ltx_para">
-<p class="ltx_p">To introduce this algorithm, we first note that in the case of regular conditioning both the conditional mean and map (given by Eq. (<a href="#S2.E7" title="Equation 7 ‣ 2 Conditioning. ‣ gprob note" class="ltx_ref"><span class="ltx_text ltx_ref_tag">7</span></a>) and Eq. (<a href="#S2.E8" title="Equation 8 ‣ 2 Conditioning. ‣ gprob note" class="ltx_ref"><span class="ltx_text ltx_ref_tag">8</span></a>), respectively), could be expressed using a <math id="S3.p3.m1" class="ltx_Math" alttext="d_{y}\times d_{x}" display="inline"><mrow><msub><mi>d</mi><mi>y</mi></msub><mo lspace="0.222em" rspace="0.222em">×</mo><msub><mi>d</mi><mi>x</mi></msub></mrow></math> matrix <math id="S3.p3.m2" class="ltx_Math" alttext="\mathbf{B}" display="inline"><mi>𝐁</mi></math>,</p>
-<table id="S3.E11" class="ltx_equation ltx_eqn_table">
-
-<tbody><tr class="ltx_equation ltx_eqn_row ltx_align_baseline">
-<td class="ltx_eqn_cell ltx_eqn_center_padleft"></td>
-<td class="ltx_eqn_cell ltx_align_center"><math id="S3.E11.m1" class="ltx_Math" alttext="\mathbf{B}=\mathbf{A}^{+}_{y}\mathbf{A}_{x}" display="block"><mrow><mi>𝐁</mi><mo>=</mo><mrow><msubsup><mi>𝐀</mi><mi>y</mi><mo>+</mo></msubsup><mo>⁢</mo><msub><mi>𝐀</mi><mi>x</mi></msub></mrow></mrow></math></td>
-<td class="ltx_eqn_cell ltx_eqn_center_padright"></td>
-<td rowspan="1" class="ltx_eqn_cell ltx_eqn_eqno ltx_align_middle ltx_align_right"><span class="ltx_tag ltx_tag_equation ltx_align_right">(11)</span></td>
-</tr></tbody>
-</table>
-<p class="ltx_p">as</p>
-<table id="S3.E12" class="ltx_equation ltx_eqn_table">
-
-<tbody><tr class="ltx_equation ltx_eqn_row ltx_align_baseline">
-<td class="ltx_eqn_cell ltx_eqn_center_padleft"></td>
-<td class="ltx_eqn_cell ltx_align_center"><math id="S3.E12.m1" class="ltx_Math" alttext="\mathbf{b}_{z}^{T}=\mathbf{b}_{x}^{T}-\mathbf{b}_{y}^{T}\mathbf{B},\qquad%
-\mathbf{A}_{z}=\mathbf{A}_{x}-\mathbf{A}_{y}\mathbf{B}." display="block"><mrow><mrow><mrow><msubsup><mi>𝐛</mi><mi>z</mi><mi>T</mi></msubsup><mo>=</mo><mrow><msubsup><mi>𝐛</mi><mi>x</mi><mi>T</mi></msubsup><mo>−</mo><mrow><msubsup><mi>𝐛</mi><mi>y</mi><mi>T</mi></msubsup><mo>⁢</mo><mi>𝐁</mi></mrow></mrow></mrow><mo rspace="2.167em">,</mo><mrow><msub><mi>𝐀</mi><mi>z</mi></msub><mo>=</mo><mrow><msub><mi>𝐀</mi><mi>x</mi></msub><mo>−</mo><mrow><msub><mi>𝐀</mi><mi>y</mi></msub><mo>⁢</mo><mi>𝐁</mi></mrow></mrow></mrow></mrow><mo lspace="0em">.</mo></mrow></math></td>
-<td class="ltx_eqn_cell ltx_eqn_center_padright"></td>
-<td rowspan="1" class="ltx_eqn_cell ltx_eqn_eqno ltx_align_middle ltx_align_right"><span class="ltx_tag ltx_tag_equation ltx_align_right">(12)</span></td>
-</tr></tbody>
-</table>
-<p class="ltx_p">The <math id="S3.p3.m3" class="ltx_Math" alttext="i" display="inline"><mi>i</mi></math>-th column of <math id="S3.p3.m4" class="ltx_Math" alttext="\mathbf{B}" display="inline"><mi>𝐁</mi></math> consists of the coefficients that give the closest in Euclidean distance approximation of the <math id="S3.p3.m5" class="ltx_Math" alttext="i" display="inline"><mi>i</mi></math>-th column of <math id="S3.p3.m6" class="ltx_Math" alttext="\mathbf{A}_{x}" display="inline"><msub><mi>𝐀</mi><mi>x</mi></msub></math> via a linear combination of the columns of <math id="S3.p3.m7" class="ltx_Math" alttext="\mathbf{A}_{y}" display="inline"><msub><mi>𝐀</mi><mi>y</mi></msub></math>.
-From this point of view, it should be clear that for vectors whose components are indexed left to right, <math id="S3.p3.m8" class="ltx_Math" alttext="\mathbf{x}=(x_{1},\ldots,x_{d_{x}})" display="inline"><mrow><mi>𝐱</mi><mo>=</mo><mrow><mo stretchy="false">(</mo><msub><mi>x</mi><mn>1</mn></msub><mo>,</mo><mi mathvariant="normal">…</mi><mo>,</mo><msub><mi>x</mi><msub><mi>d</mi><mi>x</mi></msub></msub><mo stretchy="false">)</mo></mrow></mrow></math> and <math id="S3.p3.m9" class="ltx_Math" alttext="\mathbf{y}=(y_{1},\ldots,y_{d_{y}})" display="inline"><mrow><mi>𝐲</mi><mo>=</mo><mrow><mo stretchy="false">(</mo><msub><mi>y</mi><mn>1</mn></msub><mo>,</mo><mi mathvariant="normal">…</mi><mo>,</mo><msub><mi>y</mi><msub><mi>d</mi><mi>y</mi></msub></msub><mo stretchy="false">)</mo></mrow></mrow></math>, a causal structure can be enforced in conditioning by constraining the closest-approximation matrix <math id="S3.p3.m10" class="ltx_Math" alttext="\mathbf{B}" display="inline"><mi>𝐁</mi></math> to be upper-triangular,</p>
+<p class="ltx_p">To introduce this algorithm, we first note that in the case of regular conditioning both the conditional mean and map (given by Eq. (<a href="#S2.E9" title="Equation 9 ‣ 2 Conditioning. ‣ gprob note" class="ltx_ref"><span class="ltx_text ltx_ref_tag">9</span></a>) and Eq. (<a href="#S2.E10" title="Equation 10 ‣ 2 Conditioning. ‣ gprob note" class="ltx_ref"><span class="ltx_text ltx_ref_tag">10</span></a>), respectively), could be expressed using a <math id="S3.p3.m1" class="ltx_Math" alttext="d_{y}\times d_{x}" display="inline"><mrow><msub><mi>d</mi><mi>y</mi></msub><mo lspace="0.222em" rspace="0.222em">×</mo><msub><mi>d</mi><mi>x</mi></msub></mrow></math> matrix <math id="S3.p3.m2" class="ltx_Math" alttext="\mathbf{B}" display="inline"><mi>𝐁</mi></math>,</p>
 <table id="S3.E13" class="ltx_equation ltx_eqn_table">
 
 <tbody><tr class="ltx_equation ltx_eqn_row ltx_align_baseline">
 <td class="ltx_eqn_cell ltx_eqn_center_padleft"></td>
-<td class="ltx_eqn_cell ltx_align_center"><math id="S3.E13.m1" class="ltx_Math" alttext="\mathbf{B}=\begin{pmatrix}\beta_{11}&amp;\beta_{12}&amp;\cdots&amp;\beta_{1d_{x}}\\
+<td class="ltx_eqn_cell ltx_align_center"><math id="S3.E13.m1" class="ltx_Math" alttext="\mathbf{B}=\mathbf{A}^{+}_{y}\mathbf{A}_{x}" display="block"><mrow><mi>𝐁</mi><mo>=</mo><mrow><msubsup><mi>𝐀</mi><mi>y</mi><mo>+</mo></msubsup><mo>⁢</mo><msub><mi>𝐀</mi><mi>x</mi></msub></mrow></mrow></math></td>
+<td class="ltx_eqn_cell ltx_eqn_center_padright"></td>
+<td rowspan="1" class="ltx_eqn_cell ltx_eqn_eqno ltx_align_middle ltx_align_right"><span class="ltx_tag ltx_tag_equation ltx_align_right">(13)</span></td>
+</tr></tbody>
+</table>
+<p class="ltx_p">as</p>
+<table id="S3.E14" class="ltx_equation ltx_eqn_table">
+
+<tbody><tr class="ltx_equation ltx_eqn_row ltx_align_baseline">
+<td class="ltx_eqn_cell ltx_eqn_center_padleft"></td>
+<td class="ltx_eqn_cell ltx_align_center"><math id="S3.E14.m1" class="ltx_Math" alttext="\mathbf{b}_{z}^{T}=\mathbf{b}_{x}^{T}-\mathbf{b}_{y}^{T}\mathbf{B},\qquad%
+\mathbf{A}_{z}=\mathbf{A}_{x}-\mathbf{A}_{y}\mathbf{B}." display="block"><mrow><mrow><mrow><msubsup><mi>𝐛</mi><mi>z</mi><mi>T</mi></msubsup><mo>=</mo><mrow><msubsup><mi>𝐛</mi><mi>x</mi><mi>T</mi></msubsup><mo>−</mo><mrow><msubsup><mi>𝐛</mi><mi>y</mi><mi>T</mi></msubsup><mo>⁢</mo><mi>𝐁</mi></mrow></mrow></mrow><mo rspace="2.167em">,</mo><mrow><msub><mi>𝐀</mi><mi>z</mi></msub><mo>=</mo><mrow><msub><mi>𝐀</mi><mi>x</mi></msub><mo>−</mo><mrow><msub><mi>𝐀</mi><mi>y</mi></msub><mo>⁢</mo><mi>𝐁</mi></mrow></mrow></mrow></mrow><mo lspace="0em">.</mo></mrow></math></td>
+<td class="ltx_eqn_cell ltx_eqn_center_padright"></td>
+<td rowspan="1" class="ltx_eqn_cell ltx_eqn_eqno ltx_align_middle ltx_align_right"><span class="ltx_tag ltx_tag_equation ltx_align_right">(14)</span></td>
+</tr></tbody>
+</table>
+<p class="ltx_p">The <math id="S3.p3.m3" class="ltx_Math" alttext="i" display="inline"><mi>i</mi></math>-th column of <math id="S3.p3.m4" class="ltx_Math" alttext="\mathbf{B}" display="inline"><mi>𝐁</mi></math> consists of the coefficients that give the closest in Euclidean distance approximation of the <math id="S3.p3.m5" class="ltx_Math" alttext="i" display="inline"><mi>i</mi></math>-th column of <math id="S3.p3.m6" class="ltx_Math" alttext="\mathbf{A}_{x}" display="inline"><msub><mi>𝐀</mi><mi>x</mi></msub></math> via a linear combination of the columns of <math id="S3.p3.m7" class="ltx_Math" alttext="\mathbf{A}_{y}" display="inline"><msub><mi>𝐀</mi><mi>y</mi></msub></math>.
+From this point of view, it should be clear that for vectors whose components are indexed left to right, <math id="S3.p3.m8" class="ltx_Math" alttext="\mathbf{x}=(x_{1},\ldots,x_{d_{x}})" display="inline"><mrow><mi>𝐱</mi><mo>=</mo><mrow><mo stretchy="false">(</mo><msub><mi>x</mi><mn>1</mn></msub><mo>,</mo><mi mathvariant="normal">…</mi><mo>,</mo><msub><mi>x</mi><msub><mi>d</mi><mi>x</mi></msub></msub><mo stretchy="false">)</mo></mrow></mrow></math> and <math id="S3.p3.m9" class="ltx_Math" alttext="\mathbf{y}=(y_{1},\ldots,y_{d_{y}})" display="inline"><mrow><mi>𝐲</mi><mo>=</mo><mrow><mo stretchy="false">(</mo><msub><mi>y</mi><mn>1</mn></msub><mo>,</mo><mi mathvariant="normal">…</mi><mo>,</mo><msub><mi>y</mi><msub><mi>d</mi><mi>y</mi></msub></msub><mo stretchy="false">)</mo></mrow></mrow></math>, a causal structure can be enforced in conditioning by constraining the closest-approximation matrix <math id="S3.p3.m10" class="ltx_Math" alttext="\mathbf{B}" display="inline"><mi>𝐁</mi></math> to be upper-triangular,</p>
+<table id="S3.E15" class="ltx_equation ltx_eqn_table">
+
+<tbody><tr class="ltx_equation ltx_eqn_row ltx_align_baseline">
+<td class="ltx_eqn_cell ltx_eqn_center_padleft"></td>
+<td class="ltx_eqn_cell ltx_align_center"><math id="S3.E15.m1" class="ltx_Math" alttext="\mathbf{B}=\begin{pmatrix}\beta_{11}&amp;\beta_{12}&amp;\cdots&amp;\beta_{1d_{x}}\\
 \vdots&amp;\vdots&amp;\ddots&amp;\vdots\\
 \beta_{s_{1}1}&amp;\beta_{s_{1}2}&amp;\cdots&amp;\beta_{s_{1}d_{x}}\\
 0&amp;\beta_{(s_{1}+1)2}&amp;\cdots&amp;\beta_{(s_{1}+1)d_{x}}\\
@@ -220,54 +262,54 @@ From this point of view, it should be clear that for vectors whose components ar
 \vdots&amp;\vdots&amp;\ddots&amp;\vdots\\
 0&amp;0&amp;\cdots&amp;\beta_{d_{y}d_{x}}\end{pmatrix}." display="block"><mrow><mrow><mi>𝐁</mi><mo>=</mo><mrow><mo>(</mo><mtable columnspacing="5pt" displaystyle="true" rowspacing="0pt"><mtr><mtd><msub><mi>β</mi><mn>11</mn></msub></mtd><mtd><msub><mi>β</mi><mn>12</mn></msub></mtd><mtd><mi mathvariant="normal">⋯</mi></mtd><mtd><msub><mi>β</mi><mrow><mn>1</mn><mo>⁢</mo><msub><mi>d</mi><mi>x</mi></msub></mrow></msub></mtd></mtr><mtr><mtd><mi mathvariant="normal">⋮</mi></mtd><mtd><mi mathvariant="normal">⋮</mi></mtd><mtd><mi mathvariant="normal">⋱</mi></mtd><mtd><mi mathvariant="normal">⋮</mi></mtd></mtr><mtr><mtd><msub><mi>β</mi><mrow><msub><mi>s</mi><mn>1</mn></msub><mo>⁢</mo><mn>1</mn></mrow></msub></mtd><mtd><msub><mi>β</mi><mrow><msub><mi>s</mi><mn>1</mn></msub><mo>⁢</mo><mn>2</mn></mrow></msub></mtd><mtd><mi mathvariant="normal">⋯</mi></mtd><mtd><msub><mi>β</mi><mrow><msub><mi>s</mi><mn>1</mn></msub><mo>⁢</mo><msub><mi>d</mi><mi>x</mi></msub></mrow></msub></mtd></mtr><mtr><mtd><mn>0</mn></mtd><mtd><msub><mi>β</mi><mrow><mrow><mo stretchy="false">(</mo><mrow><msub><mi>s</mi><mn>1</mn></msub><mo>+</mo><mn>1</mn></mrow><mo stretchy="false">)</mo></mrow><mo>⁢</mo><mn>2</mn></mrow></msub></mtd><mtd><mi mathvariant="normal">⋯</mi></mtd><mtd><msub><mi>β</mi><mrow><mrow><mo stretchy="false">(</mo><mrow><msub><mi>s</mi><mn>1</mn></msub><mo>+</mo><mn>1</mn></mrow><mo stretchy="false">)</mo></mrow><mo>⁢</mo><msub><mi>d</mi><mi>x</mi></msub></mrow></msub></mtd></mtr><mtr><mtd><mi mathvariant="normal">⋮</mi></mtd><mtd><mi mathvariant="normal">⋮</mi></mtd><mtd><mi mathvariant="normal">⋱</mi></mtd><mtd><mi mathvariant="normal">⋮</mi></mtd></mtr><mtr><mtd><mn>0</mn></mtd><mtd><msub><mi>β</mi><mrow><msub><mi>s</mi><mn>2</mn></msub><mo>⁢</mo><mn>2</mn></mrow></msub></mtd><mtd><mi mathvariant="normal">⋯</mi></mtd><mtd><msub><mi>β</mi><mrow><msub><mi>s</mi><mn>2</mn></msub><mo>⁢</mo><msub><mi>d</mi><mi>x</mi></msub></mrow></msub></mtd></mtr><mtr><mtd><mn>0</mn></mtd><mtd><mn>0</mn></mtd><mtd><mi mathvariant="normal">⋯</mi></mtd><mtd><msub><mi>β</mi><mrow><mrow><mo stretchy="false">(</mo><mrow><msub><mi>s</mi><mn>2</mn></msub><mo>+</mo><mn>1</mn></mrow><mo stretchy="false">)</mo></mrow><mo>⁢</mo><msub><mi>d</mi><mi>x</mi></msub></mrow></msub></mtd></mtr><mtr><mtd><mi mathvariant="normal">⋮</mi></mtd><mtd><mi mathvariant="normal">⋮</mi></mtd><mtd><mi mathvariant="normal">⋱</mi></mtd><mtd><mi mathvariant="normal">⋮</mi></mtd></mtr><mtr><mtd><mn>0</mn></mtd><mtd><mn>0</mn></mtd><mtd><mi mathvariant="normal">⋯</mi></mtd><mtd><msub><mi>β</mi><mrow><msub><mi>d</mi><mi>y</mi></msub><mo>⁢</mo><msub><mi>d</mi><mi>x</mi></msub></mrow></msub></mtd></mtr></mtable><mo>)</mo></mrow></mrow><mo lspace="0em">.</mo></mrow></math></td>
 <td class="ltx_eqn_cell ltx_eqn_center_padright"></td>
-<td rowspan="1" class="ltx_eqn_cell ltx_eqn_eqno ltx_align_middle ltx_align_right"><span class="ltx_tag ltx_tag_equation ltx_align_right">(13)</span></td>
+<td rowspan="1" class="ltx_eqn_cell ltx_eqn_eqno ltx_align_middle ltx_align_right"><span class="ltx_tag ltx_tag_equation ltx_align_right">(15)</span></td>
 </tr></tbody>
 </table>
 <p class="ltx_p">Here, the list of indices <math id="S3.p3.m11" class="ltx_Math" alttext="s_{i}" display="inline"><msub><mi>s</mi><mi>i</mi></msub></math> is a non-decreasing sequence of integers from the range <math id="S3.p3.m12" class="ltx_Math" alttext="[1,d_{y}]" display="inline"><mrow><mo stretchy="false">[</mo><mn>1</mn><mo>,</mo><msub><mi>d</mi><mi>y</mi></msub><mo stretchy="false">]</mo></mrow></math> that is tailored to the causal structure of the problem. For example, in causal Wiener filtering of a scalar random process <math id="S3.p3.m13" class="ltx_Math" alttext="x(t)" display="inline"><mrow><mi>x</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>t</mi><mo stretchy="false">)</mo></mrow></mrow></math> with a scalar noisy measurement <math id="S3.p3.m14" class="ltx_Math" alttext="y(t)" display="inline"><mrow><mi>y</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>t</mi><mo stretchy="false">)</mo></mrow></mrow></math>, discretized as <math id="S3.p3.m15" class="ltx_Math" alttext="x_{i}" display="inline"><msub><mi>x</mi><mi>i</mi></msub></math> and <math id="S3.p3.m16" class="ltx_Math" alttext="y_{i}" display="inline"><msub><mi>y</mi><mi>i</mi></msub></math>, we could put <math id="S3.p3.m17" class="ltx_Math" alttext="s_{i}=i-1" display="inline"><mrow><msub><mi>s</mi><mi>i</mi></msub><mo>=</mo><mrow><mi>i</mi><mo>−</mo><mn>1</mn></mrow></mrow></math> to use all observations before the time <math id="S3.p3.m18" class="ltx_Math" alttext="t_{i}" display="inline"><msub><mi>t</mi><mi>i</mi></msub></math> for the prediction of <math id="S3.p3.m19" class="ltx_Math" alttext="x(t_{i})" display="inline"><mrow><mi>x</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><msub><mi>t</mi><mi>i</mi></msub><mo stretchy="false">)</mo></mrow></mrow></math>.</p>
 </div>
 <div id="S3.p4" class="ltx_para">
 <p class="ltx_p">What remains is to find a way of obtaining causally-constrained matrices <math id="S3.p4.m1" class="ltx_Math" alttext="\mathbf{B}" display="inline"><mi>𝐁</mi></math>. Towards this goal, we introduce the QR decomposition of <math id="S3.p4.m2" class="ltx_Math" alttext="\mathbf{A}_{y}" display="inline"><msub><mi>𝐀</mi><mi>y</mi></msub></math>,</p>
-<table id="S3.E14" class="ltx_equation ltx_eqn_table">
-
-<tbody><tr class="ltx_equation ltx_eqn_row ltx_align_baseline">
-<td class="ltx_eqn_cell ltx_eqn_center_padleft"></td>
-<td class="ltx_eqn_cell ltx_align_center"><math id="S3.E14.m1" class="ltx_Math" alttext="\mathbf{A}_{y}=\mathbf{Q}\mathbf{R}," display="block"><mrow><mrow><msub><mi>𝐀</mi><mi>y</mi></msub><mo>=</mo><mi>𝐐𝐑</mi></mrow><mo>,</mo></mrow></math></td>
-<td class="ltx_eqn_cell ltx_eqn_center_padright"></td>
-<td rowspan="1" class="ltx_eqn_cell ltx_eqn_eqno ltx_align_middle ltx_align_right"><span class="ltx_tag ltx_tag_equation ltx_align_right">(14)</span></td>
-</tr></tbody>
-</table>
-<p class="ltx_p">where <math id="S3.p4.m3" class="ltx_Math" alttext="\mathbf{Q}" display="inline"><mi>𝐐</mi></math> is a <math id="S3.p4.m4" class="ltx_Math" alttext="n\times d_{y}" display="inline"><mrow><mi>n</mi><mo lspace="0.222em" rspace="0.222em">×</mo><msub><mi>d</mi><mi>y</mi></msub></mrow></math> matrix whose columns is an orthonormal set of vectors, and <math id="S3.p4.m5" class="ltx_Math" alttext="\mathbf{R}" display="inline"><mi>𝐑</mi></math> is a <math id="S3.p4.m6" class="ltx_Math" alttext="d_{y}\times d_{y}" display="inline"><mrow><msub><mi>d</mi><mi>y</mi></msub><mo lspace="0.222em" rspace="0.222em">×</mo><msub><mi>d</mi><mi>y</mi></msub></mrow></math> non-degenerate upper triangular matrix. The left-multiplication of <math id="S3.p4.m7" class="ltx_Math" alttext="\mathbf{B}" display="inline"><mi>𝐁</mi></math> by <math id="S3.p4.m8" class="ltx_Math" alttext="\mathbf{R}" display="inline"><mi>𝐑</mi></math> preserves the triangular structure (meaning that the elements of <math id="S3.p4.m9" class="ltx_Math" alttext="\mathbf{B}" display="inline"><mi>𝐁</mi></math> that are zero in Eq. (<a href="#S3.E13" title="Equation 13 ‣ 3 Causal conditioning of time series. Wiener filtering. ‣ gprob note" class="ltx_ref"><span class="ltx_text ltx_ref_tag">13</span></a>) are also zero in the multiplication product), and, therefore, the least-square solution of the system of equations</p>
-<table id="S3.E15" class="ltx_equation ltx_eqn_table">
-
-<tbody><tr class="ltx_equation ltx_eqn_row ltx_align_baseline">
-<td class="ltx_eqn_cell ltx_eqn_center_padleft"></td>
-<td class="ltx_eqn_cell ltx_align_center"><math id="S3.E15.m1" class="ltx_Math" alttext="\mathbf{A}_{y}\mathbf{B}=\mathbf{A}_{x}," display="block"><mrow><mrow><mrow><msub><mi>𝐀</mi><mi>y</mi></msub><mo>⁢</mo><mi>𝐁</mi></mrow><mo>=</mo><msub><mi>𝐀</mi><mi>x</mi></msub></mrow><mo>,</mo></mrow></math></td>
-<td class="ltx_eqn_cell ltx_eqn_center_padright"></td>
-<td rowspan="1" class="ltx_eqn_cell ltx_eqn_eqno ltx_align_middle ltx_align_right"><span class="ltx_tag ltx_tag_equation ltx_align_right">(15)</span></td>
-</tr></tbody>
-</table>
-<p class="ltx_p">with the desired causal constraint on <math id="S3.p4.m10" class="ltx_Math" alttext="\mathbf{B}" display="inline"><mi>𝐁</mi></math> can be expressed as</p>
 <table id="S3.E16" class="ltx_equation ltx_eqn_table">
 
 <tbody><tr class="ltx_equation ltx_eqn_row ltx_align_baseline">
 <td class="ltx_eqn_cell ltx_eqn_center_padleft"></td>
-<td class="ltx_eqn_cell ltx_align_center"><math id="S3.E16.m1" class="ltx_Math" alttext="\mathbf{B}=\mathbf{R}^{-1}\mathcal{M}\left[\mathbf{Q}^{T}\mathbf{A}_{x}\right]," display="block"><mrow><mrow><mi>𝐁</mi><mo>=</mo><mrow><msup><mi>𝐑</mi><mrow><mo>−</mo><mn>1</mn></mrow></msup><mo>⁢</mo><mi class="ltx_font_mathcaligraphic">ℳ</mi><mo>⁢</mo><mrow><mo>[</mo><mrow><msup><mi>𝐐</mi><mi>T</mi></msup><mo>⁢</mo><msub><mi>𝐀</mi><mi>x</mi></msub></mrow><mo>]</mo></mrow></mrow></mrow><mo>,</mo></mrow></math></td>
+<td class="ltx_eqn_cell ltx_align_center"><math id="S3.E16.m1" class="ltx_Math" alttext="\mathbf{A}_{y}=\mathbf{Q}\mathbf{R}," display="block"><mrow><mrow><msub><mi>𝐀</mi><mi>y</mi></msub><mo>=</mo><mi>𝐐𝐑</mi></mrow><mo>,</mo></mrow></math></td>
 <td class="ltx_eqn_cell ltx_eqn_center_padright"></td>
 <td rowspan="1" class="ltx_eqn_cell ltx_eqn_eqno ltx_align_middle ltx_align_right"><span class="ltx_tag ltx_tag_equation ltx_align_right">(16)</span></td>
 </tr></tbody>
 </table>
-<p class="ltx_p">where <math id="S3.p4.m11" class="ltx_Math" alttext="\mathcal{M}[\ldots]" display="inline"><mrow><mi class="ltx_font_mathcaligraphic">ℳ</mi><mo>⁢</mo><mrow><mo stretchy="false">[</mo><mi mathvariant="normal">…</mi><mo stretchy="false">]</mo></mrow></mrow></math> a masking operator that zeros for its argument <math id="S3.p4.m12" class="ltx_Math" alttext="\ldots" display="inline"><mi mathvariant="normal">…</mi></math> the matrix elements that are zero in Eq. (<a href="#S3.E13" title="Equation 13 ‣ 3 Causal conditioning of time series. Wiener filtering. ‣ gprob note" class="ltx_ref"><span class="ltx_text ltx_ref_tag">13</span></a>).
+<p class="ltx_p">where <math id="S3.p4.m3" class="ltx_Math" alttext="\mathbf{Q}" display="inline"><mi>𝐐</mi></math> is a <math id="S3.p4.m4" class="ltx_Math" alttext="n\times d_{y}" display="inline"><mrow><mi>n</mi><mo lspace="0.222em" rspace="0.222em">×</mo><msub><mi>d</mi><mi>y</mi></msub></mrow></math> matrix whose columns is an orthonormal set of vectors, and <math id="S3.p4.m5" class="ltx_Math" alttext="\mathbf{R}" display="inline"><mi>𝐑</mi></math> is a <math id="S3.p4.m6" class="ltx_Math" alttext="d_{y}\times d_{y}" display="inline"><mrow><msub><mi>d</mi><mi>y</mi></msub><mo lspace="0.222em" rspace="0.222em">×</mo><msub><mi>d</mi><mi>y</mi></msub></mrow></math> non-degenerate upper triangular matrix. The left-multiplication of <math id="S3.p4.m7" class="ltx_Math" alttext="\mathbf{B}" display="inline"><mi>𝐁</mi></math> by <math id="S3.p4.m8" class="ltx_Math" alttext="\mathbf{R}" display="inline"><mi>𝐑</mi></math> preserves the triangular structure (meaning that the elements of <math id="S3.p4.m9" class="ltx_Math" alttext="\mathbf{B}" display="inline"><mi>𝐁</mi></math> that are zero in Eq. (<a href="#S3.E15" title="Equation 15 ‣ 3 Causal conditioning of time series. Wiener filtering. ‣ gprob note" class="ltx_ref"><span class="ltx_text ltx_ref_tag">15</span></a>) are also zero in the multiplication product), and, therefore, the least-square solution of the system of equations</p>
+<table id="S3.E17" class="ltx_equation ltx_eqn_table">
+
+<tbody><tr class="ltx_equation ltx_eqn_row ltx_align_baseline">
+<td class="ltx_eqn_cell ltx_eqn_center_padleft"></td>
+<td class="ltx_eqn_cell ltx_align_center"><math id="S3.E17.m1" class="ltx_Math" alttext="\mathbf{A}_{y}\mathbf{B}=\mathbf{A}_{x}," display="block"><mrow><mrow><mrow><msub><mi>𝐀</mi><mi>y</mi></msub><mo>⁢</mo><mi>𝐁</mi></mrow><mo>=</mo><msub><mi>𝐀</mi><mi>x</mi></msub></mrow><mo>,</mo></mrow></math></td>
+<td class="ltx_eqn_cell ltx_eqn_center_padright"></td>
+<td rowspan="1" class="ltx_eqn_cell ltx_eqn_eqno ltx_align_middle ltx_align_right"><span class="ltx_tag ltx_tag_equation ltx_align_right">(17)</span></td>
+</tr></tbody>
+</table>
+<p class="ltx_p">with the desired causal constraint on <math id="S3.p4.m10" class="ltx_Math" alttext="\mathbf{B}" display="inline"><mi>𝐁</mi></math> can be expressed as</p>
+<table id="S3.E18" class="ltx_equation ltx_eqn_table">
+
+<tbody><tr class="ltx_equation ltx_eqn_row ltx_align_baseline">
+<td class="ltx_eqn_cell ltx_eqn_center_padleft"></td>
+<td class="ltx_eqn_cell ltx_align_center"><math id="S3.E18.m1" class="ltx_Math" alttext="\mathbf{B}=\mathbf{R}^{-1}\mathcal{M}\left[\mathbf{Q}^{T}\mathbf{A}_{x}\right]," display="block"><mrow><mrow><mi>𝐁</mi><mo>=</mo><mrow><msup><mi>𝐑</mi><mrow><mo>−</mo><mn>1</mn></mrow></msup><mo>⁢</mo><mi class="ltx_font_mathcaligraphic">ℳ</mi><mo>⁢</mo><mrow><mo>[</mo><mrow><msup><mi>𝐐</mi><mi>T</mi></msup><mo>⁢</mo><msub><mi>𝐀</mi><mi>x</mi></msub></mrow><mo>]</mo></mrow></mrow></mrow><mo>,</mo></mrow></math></td>
+<td class="ltx_eqn_cell ltx_eqn_center_padright"></td>
+<td rowspan="1" class="ltx_eqn_cell ltx_eqn_eqno ltx_align_middle ltx_align_right"><span class="ltx_tag ltx_tag_equation ltx_align_right">(18)</span></td>
+</tr></tbody>
+</table>
+<p class="ltx_p">where <math id="S3.p4.m11" class="ltx_Math" alttext="\mathcal{M}[\ldots]" display="inline"><mrow><mi class="ltx_font_mathcaligraphic">ℳ</mi><mo>⁢</mo><mrow><mo stretchy="false">[</mo><mi mathvariant="normal">…</mi><mo stretchy="false">]</mo></mrow></mrow></math> a masking operator that zeros for its argument <math id="S3.p4.m12" class="ltx_Math" alttext="\ldots" display="inline"><mi mathvariant="normal">…</mi></math> the matrix elements that are zero in Eq. (<a href="#S3.E15" title="Equation 15 ‣ 3 Causal conditioning of time series. Wiener filtering. ‣ gprob note" class="ltx_ref"><span class="ltx_text ltx_ref_tag">15</span></a>).
 Finally, the causally conditioned mean and map are given by</p>
 <table id="Ax2.EGx1" class="ltx_equationgroup ltx_eqn_align ltx_eqn_table">
 
-<tbody id="S3.E17"><tr class="ltx_equation ltx_eqn_row ltx_align_baseline">
+<tbody id="S3.E19"><tr class="ltx_equation ltx_eqn_row ltx_align_baseline">
 <td class="ltx_eqn_cell ltx_eqn_center_padleft"></td>
-<td class="ltx_td ltx_align_right ltx_eqn_cell"><math id="S3.E17.m1" class="ltx_Math" alttext="\displaystyle\mathbf{b}_{z}^{T}=\mathbf{b}_{x}^{T}-\mathbf{b}_{y}^{T}\mathbf{R%
+<td class="ltx_td ltx_align_right ltx_eqn_cell"><math id="S3.E19.m1" class="ltx_Math" alttext="\displaystyle\mathbf{b}_{z}^{T}=\mathbf{b}_{x}^{T}-\mathbf{b}_{y}^{T}\mathbf{R%
 }^{-1}\mathbf{Q}\,\mathcal{M}\left[\mathbf{Q}^{\dagger}\mathbf{A}_{x}\right]," display="inline"><mrow><mrow><msubsup><mi>𝐛</mi><mi>z</mi><mi>T</mi></msubsup><mo>=</mo><mrow><msubsup><mi>𝐛</mi><mi>x</mi><mi>T</mi></msubsup><mo>−</mo><mrow><msubsup><mi>𝐛</mi><mi>y</mi><mi>T</mi></msubsup><mo>⁢</mo><msup><mi>𝐑</mi><mrow><mo>−</mo><mn>1</mn></mrow></msup><mo>⁢</mo><mi>𝐐</mi><mo lspace="0.170em">⁢</mo><mi class="ltx_font_mathcaligraphic">ℳ</mi><mo>⁢</mo><mrow><mo>[</mo><mrow><msup><mi>𝐐</mi><mo>†</mo></msup><mo>⁢</mo><msub><mi>𝐀</mi><mi>x</mi></msub></mrow><mo>]</mo></mrow></mrow></mrow></mrow><mo>,</mo></mrow></math></td>
-<td class="ltx_td ltx_align_right ltx_eqn_cell"><math id="S3.E17.m2" class="ltx_Math" alttext="\displaystyle\mathbf{A}_{z}=\mathbf{A}_{x}-\mathbf{Q}\,\mathcal{M}\left[%
+<td class="ltx_td ltx_align_right ltx_eqn_cell"><math id="S3.E19.m2" class="ltx_Math" alttext="\displaystyle\mathbf{A}_{z}=\mathbf{A}_{x}-\mathbf{Q}\,\mathcal{M}\left[%
 \mathbf{Q}^{\dagger}\mathbf{A}_{x}\right]." display="inline"><mrow><mrow><msub><mi>𝐀</mi><mi>z</mi></msub><mo>=</mo><mrow><msub><mi>𝐀</mi><mi>x</mi></msub><mo>−</mo><mrow><mi>𝐐</mi><mo lspace="0.170em">⁢</mo><mi class="ltx_font_mathcaligraphic">ℳ</mi><mo>⁢</mo><mrow><mo>[</mo><mrow><msup><mi>𝐐</mi><mo>†</mo></msup><mo>⁢</mo><msub><mi>𝐀</mi><mi>x</mi></msub></mrow><mo>]</mo></mrow></mrow></mrow></mrow><mo lspace="0em">.</mo></mrow></math></td>
 <td class="ltx_eqn_cell ltx_eqn_center_padright"></td>
-<td rowspan="1" class="ltx_eqn_cell ltx_eqn_eqno ltx_align_middle ltx_align_right"><span class="ltx_tag ltx_tag_equation ltx_align_right">(17)</span></td>
+<td rowspan="1" class="ltx_eqn_cell ltx_eqn_eqno ltx_align_middle ltx_align_right"><span class="ltx_tag ltx_tag_equation ltx_align_right">(19)</span></td>
 </tr></tbody>
 </table>
 </div>
