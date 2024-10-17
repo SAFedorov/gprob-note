@@ -75,7 +75,7 @@ In \texttt{gprob}, all random arrays are represented in this way --- as affine m
 \begin{equation}
 x_{ijk\ldots}=\sum_\lambda e_\lambda a_{\lambda, ijk\ldots}+b_{ijk\ldots},
 \end{equation}
-where $\{e_\lambda\sim \mathcal{N}(0,1)\}$, $\lambda = 1,\ldots,n$ is a set of latent univariate normal variables, and $a$ and $b$ are numerical arrays with real or complex coefficients. The mean of $x_{ijk\ldots}$ equals $b_{ijk\ldots}$, and the covariance is
+where $\{e_\lambda\sim \mathcal{N}(0,1)\}$, $\lambda \in \mathbb{N}$ is a set of latent univariate normal variables, and $a$ and $b$ are numerical arrays with real or complex coefficients. The mean of $x_{ijk\ldots}$ equals $b_{ijk\ldots}$, and the covariance is
 \begin{equation}
 C_{ijk\ldots,rst\ldots}=\sum_{\lambda} a_{\lambda, ijk\ldots} a^*_{\lambda, rst\ldots},
 \end{equation}
@@ -117,7 +117,7 @@ e_3\\
 1\\
 \end{pmatrix},
 \end{equation}
-is anther variable, $\b{z}=\b{x}+\b{y}$, whose map is
+is another variable, $\b{z}=\b{x}+\b{y}$, whose map is
 \begin{equation}
 \b{z}=
 \begin{pmatrix}
